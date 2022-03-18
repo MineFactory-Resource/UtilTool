@@ -1,0 +1,4 @@
+name: PlayerJoinAndLeave
+version: '${project.version}'
+main: net.teamuni.playerjoinandleave.PlayerJoinAndLeave
+api-version: 1.17
