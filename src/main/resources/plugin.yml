@@ -1,4 +1,10 @@
-name: PlayerJoinAndLeave
+name: UtilTool
 version: '${project.version}'
 main: net.teamuni.playerjoinandleave.PlayerJoinAndLeave
 api-version: 1.17
+commands:
+  utiltoolreload:
+    permission: utiltool.reload
+permissions:
+  utiltool.reload:
+    default: op

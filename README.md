@@ -1,4 +1,4 @@
-# PlayerJoinAndLeave
+# UtilTool
 ## Description
 플레이어 입장 메시지를 커스텀 할 수 있도록 하는 플러그인입니다.
 
@@ -36,6 +36,8 @@ leave_message: "[NAME]님이 퇴장하셨습니다."
 ```yaml
 join_message: "&e&l[NAME]&f님이 접속하셨습니다."
 ```
+
+플러그인 리로드는 **/utiltoolreload** 명령어를 사용하여 리로드할 수 있습니다.
 ## Commands
 None
 ## Permissions
