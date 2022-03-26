@@ -2,6 +2,8 @@ package net.teamuni.playerjoinandleave;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -31,15 +33,35 @@ public final class PlayerJoinAndLeave extends JavaPlugin implements Listener {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equalsIgnoreCase("utiltoolreload")) {
-            if (sender.hasPermission("utiltool.reload")) {
-                Bukkit.getPluginManager().disablePlugin(this);
-                Objects.requireNonNull(Bukkit.getPluginManager().getPlugin("UtilTool")).reloadConfig();
-                Bukkit.getPluginManager().enablePlugin(this);
-                sender.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "UtilTool has been reloaded!");
-                return false;
-            }
+    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        Player player = (Player) sender;
+        if (cmd.getName().equalsIgnoreCase("utiltoolreload") && player.hasPermission("utiltool.reload")) {
+            Bukkit.getPluginManager().disablePlugin(this);
+            Objects.requireNonNull(Bukkit.getPluginManager().getPlugin("UtilTool")).reloadConfig();
+            Bukkit.getPluginManager().enablePlugin(this);
+            sender.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "UtilTool has been reloaded!");
+            return false;
+        }
+        if (cmd.getName().equalsIgnoreCase("setspawn") && player.hasPermission("utiltool.setspawn")) {
+            getConfig().set("spawnpoint.x", player.getLocation().getX());
+            getConfig().set("spawnpoint.y", player.getLocation().getY());
+            getConfig().set("spawnpoint.z", player.getLocation().getZ());
+            getConfig().set("spawnpoint.yaw", player.getLocation().getYaw());
+            getConfig().set("spawnpoint.pitch", player.getLocation().getPitch());
+            saveConfig();
+            sender.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "Respawn point has been set!");
+            return false;
+        }
+        if (cmd.getName().equalsIgnoreCase("spawn") && player.hasPermission("utiltool.spawn")) {
+            World world = player.getWorld();
+            double x = getConfig().getDouble("spawnpoint.x");
+            double y = getConfig().getDouble("spawnpoint.y");
+            double z = getConfig().getDouble("spawnpoint.z");
+            float yaw = (float) getConfig().getDouble("spawnpoint.yaw");
+            float pitch = (float) getConfig().getDouble("spawnpoint.pitch");
+            sender.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "이동 중...");
+            player.teleport(new Location(world, x, y, z, yaw, pitch));
+            return false;
         }
         return false;
     }

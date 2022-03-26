@@ -5,6 +5,14 @@ api-version: 1.17
 commands:
   utiltoolreload:
     permission: utiltool.reload
+  spawn:
+    permission: utiltool.spawn
+  setspawn:
+    permission: utiltool.setspawn
 permissions:
   utiltool.reload:
+    default: op
+  utiltool.spawn:
+    default: true
+  utiltool.setspawn:
     default: op
