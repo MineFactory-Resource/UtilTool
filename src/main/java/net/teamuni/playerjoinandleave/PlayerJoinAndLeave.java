@@ -11,6 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -43,6 +44,7 @@ public final class PlayerJoinAndLeave extends JavaPlugin implements Listener {
             return false;
         }
         if (cmd.getName().equalsIgnoreCase("setspawn") && player.hasPermission("utiltool.setspawn")) {
+            getConfig().set("spawnpoint.world", Objects.requireNonNull(player.getLocation().getWorld()).getName());
             getConfig().set("spawnpoint.x", player.getLocation().getX());
             getConfig().set("spawnpoint.y", player.getLocation().getY());
             getConfig().set("spawnpoint.z", player.getLocation().getZ());
@@ -53,7 +55,7 @@ public final class PlayerJoinAndLeave extends JavaPlugin implements Listener {
             return false;
         }
         if (cmd.getName().equalsIgnoreCase("spawn") && player.hasPermission("utiltool.spawn")) {
-            World world = player.getWorld();
+            World world = Bukkit.getServer().getWorld(Objects.requireNonNull(getConfig().getString("spawnpoint.world")));
             double x = getConfig().getDouble("spawnpoint.x");
             double y = getConfig().getDouble("spawnpoint.y");
             double z = getConfig().getDouble("spawnpoint.z");
@@ -94,6 +96,23 @@ public final class PlayerJoinAndLeave extends JavaPlugin implements Listener {
             event.setQuitMessage(ChatColor.translateAlternateColorCodes('&', message));
         } else {
             event.setQuitMessage(ChatColor.translateAlternateColorCodes('&', leave_message));
+        }
+    }
+
+    @EventHandler
+    public void onFall(PlayerMoveEvent event) {
+        Player player = event.getPlayer();
+        if (Objects.requireNonNull(player.getLocation().getWorld()).getName().equals(getConfig().getString("spawnpoint.world"))) {
+            if (player.getLocation().getY() <= 0) {
+                World world = Bukkit.getWorld(Objects.requireNonNull(getConfig().getString("spawnpoint.world")));
+                double x = getConfig().getDouble("spawnpoint.x");
+                double y = getConfig().getDouble("spawnpoint.y");
+                double z = getConfig().getDouble("spawnpoint.z");
+                float yaw = (float) getConfig().getDouble("spawnpoint.yaw");
+                float pitch = (float) getConfig().getDouble("spawnpoint.pitch");
+                player.teleport(new Location(world, x, y, z, yaw, pitch));
+                player.setFallDistance(0);
+            }
         }
     }
 }
