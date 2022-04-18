@@ -6,23 +6,23 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Objects;
 
-public final class PlayerJoinAndLeave extends JavaPlugin implements Listener {
+public final class utilltool extends JavaPlugin implements Listener {
 
     String join_message = "";
     String leave_message = "";
     String first_time_join_message = "";
     String message = "";
+    String shift_right_click_command = "";
 
     @Override
     public void onEnable() {
@@ -31,6 +31,7 @@ public final class PlayerJoinAndLeave extends JavaPlugin implements Listener {
         this.join_message = getConfig().getString("join_message");
         this.leave_message = getConfig().getString("leave_message");
         this.first_time_join_message = getConfig().getString("first_time_join_message");
+        this.shift_right_click_command = getConfig().getString("shift_right_click_command");
     }
 
     @Override
@@ -112,6 +113,17 @@ public final class PlayerJoinAndLeave extends JavaPlugin implements Listener {
                 float pitch = (float) getConfig().getDouble("spawnpoint.pitch");
                 player.teleport(new Location(world, x, y, z, yaw, pitch));
                 player.setFallDistance(0);
+            }
+        }
+    }
+    @EventHandler
+    public void onPlayerInteractAtEntity(PlayerInteractEntityEvent event){
+        Player p = event.getPlayer();
+        if (event.getRightClicked().getType().equals(EntityType.PLAYER))
+        { if(p.isSneaking()) {
+            String click_player_name = (event.getRightClicked()).getName();
+            String replaced_shift_right_click = (shift_right_click_command.replace("%player%",click_player_name));
+            p.performCommand(replaced_shift_right_click);
             }
         }
     }

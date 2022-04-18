@@ -13,3 +13,4 @@
 first_time_join_message: "&e&l[NAME]&f님이 서버에 처음 접속하셨습니다. 모두 환영해 주세요!"
 join_message: "&e&l[NAME]&f님이 접속하셨습니다. 어서오세요!"
 leave_message: "&e&l[NAME]&f님이 퇴장하셨습니다. 안녕히 가세요!"
+shift_right_click_command: "kill %player%"  # %player%는 쉬프트+우클릭한 사람의 닉네임입니다! "ex : kill %player%"로 하게되면 쉬프트+우클릭으로 타인을 죽일 수 있습니다.
