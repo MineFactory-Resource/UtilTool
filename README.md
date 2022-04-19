@@ -5,7 +5,7 @@
 ### Use Spigot Version:
 1.17.1
 ### Tested Spigot Version:
-1.17.1
+1.17.1, 1.18.2
 ### Required Plugin:
 None
 
