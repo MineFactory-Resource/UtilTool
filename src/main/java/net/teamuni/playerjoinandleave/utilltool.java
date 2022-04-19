@@ -1,5 +1,6 @@
 package net.teamuni.playerjoinandleave;
 
+import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -116,14 +117,18 @@ public final class utilltool extends JavaPlugin implements Listener {
             }
         }
     }
+
     @EventHandler
-    public void onPlayerInteractAtEntity(PlayerInteractEntityEvent event){
+    public void onPlayerInteractAtEntity(PlayerInteractEntityEvent event) {
         Player p = event.getPlayer();
-        if (event.getRightClicked().getType().equals(EntityType.PLAYER))
-        { if(p.isSneaking()) {
-            String click_player_name = (event.getRightClicked()).getName();
-            String replaced_shift_right_click = (shift_right_click_command.replace("%player%",click_player_name));
-            p.performCommand(replaced_shift_right_click);
+        List<String> rightclick_world = getConfig().getStringList("enable_world");
+        if (event.getRightClicked().getType().equals(EntityType.PLAYER)) {
+            if (p.isSneaking()) {
+                if (rightclick_world.stream().anyMatch(w -> p.getWorld().equals(Bukkit.getWorld(w)))) {
+                    String click_player_name = (event.getRightClicked()).getName();
+                    String replaced_shift_right_click = (shift_right_click_command.replace("%player%", click_player_name));
+                    p.performCommand(replaced_shift_right_click);
+                }
             }
         }
     }
