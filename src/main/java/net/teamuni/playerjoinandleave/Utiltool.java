@@ -17,7 +17,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Objects;
 
-public final class utilltool extends JavaPlugin implements Listener {
+public final class Utiltool extends JavaPlugin implements Listener {
 
     String join_message = "";
     String leave_message = "";
