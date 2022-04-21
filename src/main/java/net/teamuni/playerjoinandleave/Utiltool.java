@@ -122,14 +122,12 @@ public final class Utiltool extends JavaPlugin implements Listener {
     public void onPlayerInteractAtEntity(PlayerInteractEntityEvent event) {
         Player p = event.getPlayer();
         List<String> rightclick_world = getConfig().getStringList("enable_world");
-        if (event.getRightClicked().getType().equals(EntityType.PLAYER)) {
-            if (p.isSneaking()) {
+        if (event.getRightClicked().getType().equals(EntityType.PLAYER) && p.isSneaking()) {
                 if (rightclick_world.stream().anyMatch(w -> p.getWorld().equals(Bukkit.getWorld(w)))) {
                     String click_player_name = (event.getRightClicked()).getName();
                     String replaced_shift_right_click = (shift_right_click_command.replace("%player%", click_player_name));
                     p.performCommand(replaced_shift_right_click);
                 }
-            }
         }
     }
 }
