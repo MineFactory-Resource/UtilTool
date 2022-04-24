@@ -1,6 +1,6 @@
 name: UtilTool
 version: '${project.version}'
-main: net.teamuni.playerjoinandleave.utilltool
+main: net.teamuni.playerjoinandleave.UtilTool
 api-version: 1.17
 commands:
   utiltoolreload:
