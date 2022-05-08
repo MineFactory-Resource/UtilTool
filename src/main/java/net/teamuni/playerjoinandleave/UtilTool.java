@@ -4,10 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandMap;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.PluginCommand;
+import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -22,10 +19,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 public final class UtilTool extends JavaPlugin implements Listener {
 
@@ -33,8 +27,8 @@ public final class UtilTool extends JavaPlugin implements Listener {
     String leave_message = "";
     String first_time_join_message = "";
     String message = "";
-    Set<String> commandsSet;
     List<String> commandsList;
+    CommandMap commandMap;
 
     @Override
     public void onEnable() {
@@ -43,10 +37,8 @@ public final class UtilTool extends JavaPlugin implements Listener {
         this.join_message = getConfig().getString("join_message");
         this.leave_message = getConfig().getString("leave_message");
         this.first_time_join_message = getConfig().getString("first_time_join_message");
-        UtilToolCommands.createCommandsYml();
-        UtilToolCommands.save();
-        this.commandsSet = Objects.requireNonNull(UtilToolCommands.get().getConfigurationSection("Commands")).getKeys(false);
-        this.commandsList = new ArrayList<>(commandsSet);
+        CommandsManager.createCommandsYml();
+        this.commandsList = new ArrayList<>(CommandsManager.get().getConfigurationSection("Commands").getKeys(false));
         registerCommands();
     }
 
@@ -54,10 +46,12 @@ public final class UtilTool extends JavaPlugin implements Listener {
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         Player player = (Player) sender;
         if (cmd.getName().equalsIgnoreCase("utiltoolreload") && player.hasPermission("utiltool.reload")) {
+            commandMap = null;
             Bukkit.getPluginManager().disablePlugin(this);
-            Objects.requireNonNull(Bukkit.getPluginManager().getPlugin("UtilTool")).reloadConfig();
-            UtilToolCommands.reload();
             Bukkit.getPluginManager().enablePlugin(this);
+            Objects.requireNonNull(Bukkit.getPluginManager().getPlugin("UtilTool")).reloadConfig();
+            CommandsManager.reload();
+            CommandsManager.save();
             player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "UtilTool has been reloaded!");
             return false;
         }
@@ -83,31 +77,29 @@ public final class UtilTool extends JavaPlugin implements Listener {
             player.teleport(new Location(world, x, y, z, yaw, pitch));
             return false;
         }
-        for (String commandList : commandsList) {
-            if (cmd.getName().equalsIgnoreCase(commandList)) {
-                String nameOfCommand = cmd.getName();
-                List<String> commandMessages = UtilToolCommands.get().getStringList("Commands." + nameOfCommand);
-                for (String commandMessage : commandMessages) {
-                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', commandMessage));
-                }
+        if (commandsList.contains(cmd.getName())) {
+            for (String commandMessage : CommandsManager.get().getStringList("Commands." + cmd.getName())) {
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', commandMessage));
             }
         }
         return false;
     }
 
     public void registerCommands() {
-        try {
-            Constructor<PluginCommand> constructor = PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class);
-            constructor.setAccessible(true);
-            for (String commandList : commandsList) {
-                PluginCommand pluginCommand = constructor.newInstance(commandList, this);
-                Field field = SimplePluginManager.class.getDeclaredField("commandMap");
-                field.setAccessible(true);
-                CommandMap commandMap = (CommandMap) field.get(getServer().getPluginManager());
-                commandMap.register(getDescription().getName(), pluginCommand);
+        if (commandMap == null) {
+            try {
+                Constructor<PluginCommand> constructor = PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class);
+                constructor.setAccessible(true);
+                for (String commandList : commandsList) {
+                    PluginCommand pluginCommand = constructor.newInstance(commandList, this);
+                    Field field = SimplePluginManager.class.getDeclaredField("commandMap");
+                    field.setAccessible(true);
+                    commandMap = (CommandMap) field.get(getServer().getPluginManager());
+                    commandMap.register(getDescription().getName(), pluginCommand);
+                }
+            } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException | NoSuchMethodException | InstantiationException | InvocationTargetException e) {
+                e.printStackTrace();
             }
-        } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException | NoSuchMethodException | InstantiationException | InvocationTargetException e) {
-            e.printStackTrace();
         }
     }
 
