@@ -7,7 +7,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.io.IOException;
 
-public class UtilToolCommands {
+public class CommandsManager {
 
     private static final UtilTool main = UtilTool.getPlugin(UtilTool.class);
     private static File file;
