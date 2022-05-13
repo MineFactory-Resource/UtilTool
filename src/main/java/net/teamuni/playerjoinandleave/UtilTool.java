@@ -40,6 +40,9 @@ public final class UtilTool extends JavaPlugin implements Listener {
         CommandsManager.createCommandsYml();
         this.commandsList = new ArrayList<>(CommandsManager.get().getConfigurationSection("Commands").getKeys(false));
         registerCommands();
+        if (commandsList == null) {
+            System.out.println("commands.yml에 명령어가 존재하지 않습니다.");
+        }
     }
 
     @Override
@@ -77,7 +80,7 @@ public final class UtilTool extends JavaPlugin implements Listener {
             player.teleport(new Location(world, x, y, z, yaw, pitch));
             return false;
         }
-        if (commandsList.contains(cmd.getName())) {
+        if (commandsList != null && commandsList.contains(cmd.getName())) {
             for (String commandMessage : CommandsManager.get().getStringList("Commands." + cmd.getName())) {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', commandMessage));
             }
@@ -86,7 +89,7 @@ public final class UtilTool extends JavaPlugin implements Listener {
     }
 
     public void registerCommands() {
-        if (commandMap == null) {
+        if (commandMap == null && commandsList != null) {
             try {
                 Constructor<PluginCommand> constructor = PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class);
                 constructor.setAccessible(true);
