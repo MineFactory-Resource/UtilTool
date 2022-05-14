@@ -53,7 +53,7 @@ public final class UtilTool extends JavaPlugin implements Listener {
         this.commandsList = new ArrayList<>(CommandsManager.get().getConfigurationSection("Commands").getKeys(false));
         registerCommands();
         if (commandsList == null) {
-            System.out.println("commands.yml에 명령어가 존재하지 않습니다.");
+            getLogger().info("commands.yml에 명령어가 존재하지 않습니다.");
         }
         this.shift_right_click_command = getConfig().getString("shift_right_click_command");
     }
@@ -102,7 +102,7 @@ public final class UtilTool extends JavaPlugin implements Listener {
                         player.sendMessage(ChatColor.translateAlternateColorCodes('&', commandMessage));
                     }
                 } else {
-                    System.out.println("명령어에 할당된 메시지가 존재하지 않습니다.");
+                    getLogger().info("명령어에 할당된 메시지가 존재하지 않습니다.");
                 }
             }
         }
@@ -178,12 +178,12 @@ public final class UtilTool extends JavaPlugin implements Listener {
     @EventHandler
     public void onPlayerInteractAtEntity(PlayerInteractEntityEvent event) {
         Player p = event.getPlayer();
-        List<String> rightclick_world = getConfig().getStringList("enable_world");
+        List<String> rightClickWorld = getConfig().getStringList("enable_world");
         if (event.getRightClicked().getType().equals(EntityType.PLAYER) && p.isSneaking()) {
-            if (rightclick_world.stream().anyMatch(current_world -> p.getWorld().equals(Bukkit.getWorld(current_world)))) {
-                String click_player_name = (event.getRightClicked()).getName();
-                String replaced_shift_right_click = (shift_right_click_command.replace("%player%", click_player_name));
-                p.performCommand(replaced_shift_right_click);
+            if (rightClickWorld.stream().anyMatch(current_world -> p.getWorld().equals(Bukkit.getWorld(current_world)))) {
+                String clickPlayerName = (event.getRightClicked()).getName();
+                String replacedShiftRightClick = (shift_right_click_command.replace("%player%", clickPlayerName));
+                p.performCommand(replacedShiftRightClick);
             }
         }
     }
