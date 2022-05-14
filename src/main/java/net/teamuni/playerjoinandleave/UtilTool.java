@@ -5,6 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.command.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
@@ -12,6 +13,17 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.SimplePluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
 import org.bukkit.event.player.*;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -23,6 +35,8 @@ public final class UtilTool extends JavaPlugin implements Listener {
     String leave_message = "";
     String first_time_join_message = "";
     String message = "";
+    List<String> commandsList;
+    CommandMap commandMap;
     String shift_right_click_command = "";
 
     @Override
@@ -32,6 +46,12 @@ public final class UtilTool extends JavaPlugin implements Listener {
         this.join_message = getConfig().getString("join_message");
         this.leave_message = getConfig().getString("leave_message");
         this.first_time_join_message = getConfig().getString("first_time_join_message");
+        CommandsManager.createCommandsYml();
+        this.commandsList = new ArrayList<>(CommandsManager.get().getConfigurationSection("Commands").getKeys(false));
+        registerCommands();
+        if (commandsList == null) {
+            System.out.println("commands.yml에 명령어가 존재하지 않습니다.");
+        }
         this.shift_right_click_command = getConfig().getString("shift_right_click_command");
     }
 
@@ -39,10 +59,15 @@ public final class UtilTool extends JavaPlugin implements Listener {
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         Player player = (Player) sender;
         if (cmd.getName().equalsIgnoreCase("utiltoolreload") && player.hasPermission("utiltool.reload")) {
+            commandMap = null;
+            Bukkit.getPluginManager().disablePlugin(this);
+            Bukkit.getPluginManager().enablePlugin(this);
+            Objects.requireNonNull(Bukkit.getPluginManager().getPlugin("UtilTool")).reloadConfig();
+            CommandsManager.reload();
+            CommandsManager.save();
+            player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "UtilTool has been reloaded!");
             Bukkit.getPluginManager().disablePlugin(this);
             Objects.requireNonNull(Bukkit.getPluginManager().getPlugin("UtilTool")).reloadConfig();
-            Bukkit.getPluginManager().enablePlugin(this);
-            sender.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "UtilTool has been reloaded!");
             return false;
         }
         if (cmd.getName().equalsIgnoreCase("setspawn") && player.hasPermission("utiltool.setspawn")) {
@@ -53,7 +78,7 @@ public final class UtilTool extends JavaPlugin implements Listener {
             getConfig().set("spawnpoint.yaw", player.getLocation().getYaw());
             getConfig().set("spawnpoint.pitch", player.getLocation().getPitch());
             saveConfig();
-            sender.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "Respawn point has been set!");
+            player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "Respawn point has been set!");
             return false;
         }
         if (cmd.getName().equalsIgnoreCase("spawn") && player.hasPermission("utiltool.spawn")) {
@@ -63,11 +88,34 @@ public final class UtilTool extends JavaPlugin implements Listener {
             double z = getConfig().getDouble("spawnpoint.z");
             float yaw = (float) getConfig().getDouble("spawnpoint.yaw");
             float pitch = (float) getConfig().getDouble("spawnpoint.pitch");
-            sender.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "이동 중...");
+            player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "이동 중...");
             player.teleport(new Location(world, x, y, z, yaw, pitch));
             return false;
         }
+        if (commandsList != null && commandsList.contains(cmd.getName())) {
+            for (String commandMessage : CommandsManager.get().getStringList("Commands." + cmd.getName())) {
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', commandMessage));
+            }
+        }
         return false;
+    }
+
+    public void registerCommands() {
+        if (commandMap == null && commandsList != null) {
+            try {
+                Constructor<PluginCommand> constructor = PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class);
+                constructor.setAccessible(true);
+                for (String commandList : commandsList) {
+                    PluginCommand pluginCommand = constructor.newInstance(commandList, this);
+                    Field field = SimplePluginManager.class.getDeclaredField("commandMap");
+                    field.setAccessible(true);
+                    commandMap = (CommandMap) field.get(getServer().getPluginManager());
+                    commandMap.register(getDescription().getName(), pluginCommand);
+                }
+            } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException | NoSuchMethodException | InstantiationException | InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGH)
