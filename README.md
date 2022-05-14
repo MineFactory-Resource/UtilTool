@@ -7,7 +7,7 @@
 ### Tested Spigot Version:
 1.17.1, 1.18.2
 ### Required Plugin:
-None
+PlaceholderAPI (Optional)
 
 ## Install Guide
 1. 최신 버전의 플러그인 파일을 다운로드합니다.
@@ -45,6 +45,7 @@ join_message: "&e&l[NAME]&f님이 접속하셨습니다."
 플레이어가 세계 밖(y: 0)으로 떨어졌을 때 스폰으로 텔레포트됩니다.  
 ### 커스텀 메시지 명령어 기능
 commands.yml을 통해 설정한 특정 명령어를 입력할 경우 할당된 메시지를 전송합니다.  
+커스텀 메시지 명령어 기능은 PlaceholderAPI를 지원합니다.
 
 사용 예시:
 ```yaml
