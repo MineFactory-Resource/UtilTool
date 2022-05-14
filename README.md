@@ -68,6 +68,27 @@ Commands:
   카페:
     - "&3현재 운영 중인 카페가 없습니다."  
 ```
+
+### 쉬프트+우클릭 명령어 기능
+다른 플레이어에게 웅크린채로 우클릭을 하면 설정한 명령어가 실행되는 기능입니다.
+config.yml 양식은 아래와 같습니다.
+```
+shift_right_click_command: ""
+enable_world: ""
+```
+shift_right_click_command - 다른 플레이어에게 웅크린채로 우클릭을 했을때 실행되는 명령어.
+enable_world - 해당 기능을 쓸 수 있는 월드 리스트.
+클릭당한 플레이어의 이름을 가져오려면 %player%를 사용해 주세요.
+
+사용 예시 :
+```
+shift_right_click_command: "msg %player% Hello!"
+enable_world:
+  - "world"
+  - "world_nether"
+```
+
+
 ## Commands
 플러그인 리로드 하기: /utiltoolreload  
 스폰 지점 정하기: /setspawn  

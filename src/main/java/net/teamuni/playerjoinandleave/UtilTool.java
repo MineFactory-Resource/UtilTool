@@ -1,10 +1,14 @@
 package net.teamuni.playerjoinandleave;
 
+import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.*;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -20,6 +24,10 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+import org.bukkit.event.player.*;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.Objects;
 
 public final class UtilTool extends JavaPlugin implements Listener {
 
@@ -29,6 +37,7 @@ public final class UtilTool extends JavaPlugin implements Listener {
     String message = "";
     List<String> commandsList;
     CommandMap commandMap;
+    String shift_right_click_command = "";
 
     @Override
     public void onEnable() {
@@ -43,6 +52,7 @@ public final class UtilTool extends JavaPlugin implements Listener {
         if (commandsList == null) {
             System.out.println("commands.yml에 명령어가 존재하지 않습니다.");
         }
+        this.shift_right_click_command = getConfig().getString("shift_right_click_command");
     }
 
     @Override
@@ -56,6 +66,8 @@ public final class UtilTool extends JavaPlugin implements Listener {
             CommandsManager.reload();
             CommandsManager.save();
             player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "UtilTool has been reloaded!");
+            Bukkit.getPluginManager().disablePlugin(this);
+            Objects.requireNonNull(Bukkit.getPluginManager().getPlugin("UtilTool")).reloadConfig();
             return false;
         }
         if (cmd.getName().equalsIgnoreCase("setspawn") && player.hasPermission("utiltool.setspawn")) {
@@ -151,6 +163,19 @@ public final class UtilTool extends JavaPlugin implements Listener {
                 player.teleport(new Location(world, x, y, z, yaw, pitch));
                 player.setFallDistance(0);
             }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerInteractAtEntity(PlayerInteractEntityEvent event) {
+        Player p = event.getPlayer();
+        List<String> rightclick_world = getConfig().getStringList("enable_world");
+        if (event.getRightClicked().getType().equals(EntityType.PLAYER) && p.isSneaking()) {
+                if (rightclick_world.stream().anyMatch(current_world -> p.getWorld().equals(Bukkit.getWorld(current_world)))) {
+                    String click_player_name = (event.getRightClicked()).getName();
+                    String replaced_shift_right_click = (shift_right_click_command.replace("%player%", click_player_name));
+                    p.performCommand(replaced_shift_right_click);
+                }
         }
     }
 }
