@@ -26,6 +26,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+
 import org.bukkit.event.player.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -94,10 +95,14 @@ public final class UtilTool extends JavaPlugin implements Listener {
         }
         if (commandsList != null && commandsList.contains(cmd.getName())) {
             for (String commandMessage : CommandsManager.get().getStringList("Commands." + cmd.getName())) {
-                if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', PlaceholderAPI.setPlaceholders(player, commandMessage)));
+                if (commandMessage != null) {
+                    if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', PlaceholderAPI.setPlaceholders(player, commandMessage)));
+                    } else {
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', commandMessage));
+                    }
                 } else {
-                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', commandMessage));
+                    System.out.println("명령어에 할당된 메시지가 존재하지 않습니다.");
                 }
             }
         }
@@ -175,11 +180,11 @@ public final class UtilTool extends JavaPlugin implements Listener {
         Player p = event.getPlayer();
         List<String> rightclick_world = getConfig().getStringList("enable_world");
         if (event.getRightClicked().getType().equals(EntityType.PLAYER) && p.isSneaking()) {
-                if (rightclick_world.stream().anyMatch(current_world -> p.getWorld().equals(Bukkit.getWorld(current_world)))) {
-                    String click_player_name = (event.getRightClicked()).getName();
-                    String replaced_shift_right_click = (shift_right_click_command.replace("%player%", click_player_name));
-                    p.performCommand(replaced_shift_right_click);
-                }
+            if (rightclick_world.stream().anyMatch(current_world -> p.getWorld().equals(Bukkit.getWorld(current_world)))) {
+                String click_player_name = (event.getRightClicked()).getName();
+                String replaced_shift_right_click = (shift_right_click_command.replace("%player%", click_player_name));
+                p.performCommand(replaced_shift_right_click);
+            }
         }
     }
 }
