@@ -1,6 +1,8 @@
 package net.teamuni.playerjoinandleave;
 
 import java.util.List;
+
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -25,7 +27,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import org.bukkit.event.player.*;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -56,7 +58,7 @@ public final class UtilTool extends JavaPlugin implements Listener {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, Command cmd, @NotNull String label, String[] args) {
         Player player = (Player) sender;
         if (cmd.getName().equalsIgnoreCase("utiltoolreload") && player.hasPermission("utiltool.reload")) {
             commandMap = null;
@@ -66,8 +68,6 @@ public final class UtilTool extends JavaPlugin implements Listener {
             CommandsManager.reload();
             CommandsManager.save();
             player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "UtilTool has been reloaded!");
-            Bukkit.getPluginManager().disablePlugin(this);
-            Objects.requireNonNull(Bukkit.getPluginManager().getPlugin("UtilTool")).reloadConfig();
             return false;
         }
         if (cmd.getName().equalsIgnoreCase("setspawn") && player.hasPermission("utiltool.setspawn")) {
@@ -94,7 +94,11 @@ public final class UtilTool extends JavaPlugin implements Listener {
         }
         if (commandsList != null && commandsList.contains(cmd.getName())) {
             for (String commandMessage : CommandsManager.get().getStringList("Commands." + cmd.getName())) {
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', commandMessage));
+                if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', PlaceholderAPI.setPlaceholders(player, commandMessage)));
+                } else {
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', commandMessage));
+                }
             }
         }
         return false;
