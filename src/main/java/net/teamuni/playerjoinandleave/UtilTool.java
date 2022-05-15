@@ -52,8 +52,8 @@ public final class UtilTool extends JavaPlugin implements Listener {
         CommandsManager.createCommandsYml();
         this.commandsList = new ArrayList<>(CommandsManager.get().getConfigurationSection("Commands").getKeys(false));
         registerCommands();
-        if (commandsList == null) {
-            getLogger().info("commands.yml에 명령어가 존재하지 않습니다.");
+        if (CommandsManager.get().getConfigurationSection("Commands") == null) {
+            getLogger().info("The command does not exist in commands.yml.");
         }
         this.shift_right_click_command = getConfig().getString("shift_right_click_command");
     }
@@ -101,9 +101,10 @@ public final class UtilTool extends JavaPlugin implements Listener {
                     } else {
                         player.sendMessage(ChatColor.translateAlternateColorCodes('&', commandMessage));
                     }
-                } else {
-                    getLogger().info("명령어에 할당된 메시지가 존재하지 않습니다.");
                 }
+            }
+            if (CommandsManager.get().getStringList("Commands." + cmd.getName()).isEmpty()) {
+                getLogger().info("The message assigned to the Commands does not exist.");
             }
         }
         return false;
