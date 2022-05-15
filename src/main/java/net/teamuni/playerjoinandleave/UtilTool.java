@@ -34,22 +34,21 @@ import java.util.Objects;
 
 public final class UtilTool extends JavaPlugin implements Listener {
 
-    String join_message = "";
-    String leave_message = "";
-    String first_time_join_message = "";
+    String joinMessage = "";
+    String leaveMessage = "";
+    String firstTimeJoinMessage = "";
     String message = "";
     List<String> commandsList;
-    CommandMap commandMap;
-    String shift_right_click_command = "";
+    String shiftRightClickCommand = "";
 
     @Override
     public void onEnable() {
         this.getServer().getPluginManager().registerEvents(this, this);
         this.saveDefaultConfig();
-        this.join_message = getConfig().getString("join_message");
-        this.leave_message = getConfig().getString("leave_message");
-        this.first_time_join_message = getConfig().getString("first_time_join_message");
-        this.shift_right_click_command = getConfig().getString("shift_right_click_command");
+        this.joinMessage = getConfig().getString("join_message");
+        this.leaveMessage = getConfig().getString("leave_message");
+        this.firstTimeJoinMessage = getConfig().getString("first_time_join_message");
+        this.shiftRightClickCommand = getConfig().getString("shift_right_click_command");
         CommandsManager.createCommandsYml();
         try {
             this.commandsList = new ArrayList<>(CommandsManager.get().getConfigurationSection("Commands").getKeys(false));
@@ -112,16 +111,15 @@ public final class UtilTool extends JavaPlugin implements Listener {
     }
 
     public void registerCommands() {
-        commandMap = null;
         try {
             if (commandsList != null) {
                 Constructor<PluginCommand> constructor = PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class);
                 constructor.setAccessible(true);
+                Field field = SimplePluginManager.class.getDeclaredField("commandMap");
+                field.setAccessible(true);
+                CommandMap commandMap = (CommandMap) field.get(getServer().getPluginManager());
                 for (String commandList : commandsList) {
                     PluginCommand pluginCommand = constructor.newInstance(commandList, this);
-                    Field field = SimplePluginManager.class.getDeclaredField("commandMap");
-                    field.setAccessible(true);
-                    commandMap = (CommandMap) field.get(getServer().getPluginManager());
                     commandMap.register(getDescription().getName(), pluginCommand);
                 }
             }
@@ -134,18 +132,18 @@ public final class UtilTool extends JavaPlugin implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         if (player.hasPlayedBefore()) {
-            if (join_message.contains("[NAME]")) {
-                message = join_message.replace("[NAME]", player.getDisplayName());
+            if (joinMessage.contains("[NAME]")) {
+                message = joinMessage.replace("[NAME]", player.getDisplayName());
                 event.setJoinMessage(ChatColor.translateAlternateColorCodes('&', message));
             } else {
-                event.setJoinMessage(ChatColor.translateAlternateColorCodes('&', join_message));
+                event.setJoinMessage(ChatColor.translateAlternateColorCodes('&', joinMessage));
             }
         } else {
-            if (first_time_join_message.contains("[NAME]")) {
-                message = first_time_join_message.replace("[NAME]", player.getDisplayName());
+            if (firstTimeJoinMessage.contains("[NAME]")) {
+                message = firstTimeJoinMessage.replace("[NAME]", player.getDisplayName());
                 event.setJoinMessage(ChatColor.translateAlternateColorCodes('&', message));
             } else {
-                event.setJoinMessage(ChatColor.translateAlternateColorCodes('&', first_time_join_message));
+                event.setJoinMessage(ChatColor.translateAlternateColorCodes('&', firstTimeJoinMessage));
             }
         }
     }
@@ -153,11 +151,11 @@ public final class UtilTool extends JavaPlugin implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onLeave(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        if (leave_message.contains("[NAME]")) {
-            message = leave_message.replace("[NAME]", player.getDisplayName());
+        if (leaveMessage.contains("[NAME]")) {
+            message = leaveMessage.replace("[NAME]", player.getDisplayName());
             event.setQuitMessage(ChatColor.translateAlternateColorCodes('&', message));
         } else {
-            event.setQuitMessage(ChatColor.translateAlternateColorCodes('&', leave_message));
+            event.setQuitMessage(ChatColor.translateAlternateColorCodes('&', leaveMessage));
         }
     }
 
@@ -185,7 +183,7 @@ public final class UtilTool extends JavaPlugin implements Listener {
         if (event.getRightClicked().getType().equals(EntityType.PLAYER) && p.isSneaking()) {
             if (rightClickWorld.stream().anyMatch(current_world -> p.getWorld().equals(Bukkit.getWorld(current_world)))) {
                 String clickPlayerName = (event.getRightClicked()).getName();
-                String replacedShiftRightClick = (shift_right_click_command.replace("%player%", clickPlayerName));
+                String replacedShiftRightClick = (shiftRightClickCommand.replace("%player%", clickPlayerName));
                 p.performCommand(replacedShiftRightClick);
             }
         }
