@@ -49,20 +49,21 @@ public final class UtilTool extends JavaPlugin implements Listener {
         this.join_message = getConfig().getString("join_message");
         this.leave_message = getConfig().getString("leave_message");
         this.first_time_join_message = getConfig().getString("first_time_join_message");
+        this.shift_right_click_command = getConfig().getString("shift_right_click_command");
         CommandsManager.createCommandsYml();
-        this.commandsList = new ArrayList<>(CommandsManager.get().getConfigurationSection("Commands").getKeys(false));
-        registerCommands();
-        if (CommandsManager.get().getConfigurationSection("Commands") == null) {
+        try {
+            this.commandsList = new ArrayList<>(CommandsManager.get().getConfigurationSection("Commands").getKeys(false));
+        } catch (NullPointerException e) {
+            e.printStackTrace();
             getLogger().info("The command does not exist in commands.yml.");
         }
-        this.shift_right_click_command = getConfig().getString("shift_right_click_command");
+        registerCommands();
     }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, Command cmd, @NotNull String label, String[] args) {
         Player player = (Player) sender;
         if (cmd.getName().equalsIgnoreCase("utiltoolreload") && player.hasPermission("utiltool.reload")) {
-            commandMap = null;
             Bukkit.getPluginManager().disablePlugin(this);
             Bukkit.getPluginManager().enablePlugin(this);
             Objects.requireNonNull(Bukkit.getPluginManager().getPlugin("UtilTool")).reloadConfig();
@@ -111,8 +112,9 @@ public final class UtilTool extends JavaPlugin implements Listener {
     }
 
     public void registerCommands() {
-        if (commandMap == null && commandsList != null) {
-            try {
+        commandMap = null;
+        try {
+            if (commandsList != null) {
                 Constructor<PluginCommand> constructor = PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class);
                 constructor.setAccessible(true);
                 for (String commandList : commandsList) {
@@ -122,9 +124,9 @@ public final class UtilTool extends JavaPlugin implements Listener {
                     commandMap = (CommandMap) field.get(getServer().getPluginManager());
                     commandMap.register(getDescription().getName(), pluginCommand);
                 }
-            } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException | NoSuchMethodException | InstantiationException | InvocationTargetException e) {
-                e.printStackTrace();
             }
+        } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException | NoSuchMethodException | InstantiationException | InvocationTargetException e) {
+            e.printStackTrace();
         }
     }
 
