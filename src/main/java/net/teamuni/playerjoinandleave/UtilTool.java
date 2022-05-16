@@ -1,6 +1,8 @@
 package net.teamuni.playerjoinandleave;
 
 import java.util.List;
+
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -24,41 +26,43 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+
 import org.bukkit.event.player.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
 public final class UtilTool extends JavaPlugin implements Listener {
 
-    String join_message = "";
-    String leave_message = "";
-    String first_time_join_message = "";
+    String joinMessage = "";
+    String leaveMessage = "";
+    String firstTimeJoinMessage = "";
     String message = "";
     List<String> commandsList;
-    CommandMap commandMap;
-    String shift_right_click_command = "";
+    String shiftRightClickCommand = "";
 
     @Override
     public void onEnable() {
         this.getServer().getPluginManager().registerEvents(this, this);
         this.saveDefaultConfig();
-        this.join_message = getConfig().getString("join_message");
-        this.leave_message = getConfig().getString("leave_message");
-        this.first_time_join_message = getConfig().getString("first_time_join_message");
+        this.joinMessage = getConfig().getString("join_message");
+        this.leaveMessage = getConfig().getString("leave_message");
+        this.firstTimeJoinMessage = getConfig().getString("first_time_join_message");
+        this.shiftRightClickCommand = getConfig().getString("shift_right_click_command");
         CommandsManager.createCommandsYml();
-        this.commandsList = new ArrayList<>(CommandsManager.get().getConfigurationSection("Commands").getKeys(false));
-        registerCommands();
-        if (commandsList == null) {
-            System.out.println("commands.yml에 명령어가 존재하지 않습니다.");
+        try {
+            this.commandsList = new ArrayList<>(CommandsManager.get().getConfigurationSection("Commands").getKeys(false));
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            getLogger().info("The command does not exist in commands.yml.");
         }
-        this.shift_right_click_command = getConfig().getString("shift_right_click_command");
+        registerCommands();
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, Command cmd, @NotNull String label, String[] args) {
         Player player = (Player) sender;
         if (cmd.getName().equalsIgnoreCase("utiltoolreload") && player.hasPermission("utiltool.reload")) {
-            commandMap = null;
             Bukkit.getPluginManager().disablePlugin(this);
             Bukkit.getPluginManager().enablePlugin(this);
             Objects.requireNonNull(Bukkit.getPluginManager().getPlugin("UtilTool")).reloadConfig();
@@ -91,27 +95,36 @@ public final class UtilTool extends JavaPlugin implements Listener {
         }
         if (commandsList != null && commandsList.contains(cmd.getName())) {
             for (String commandMessage : CommandsManager.get().getStringList("Commands." + cmd.getName())) {
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', commandMessage));
+                if (commandMessage != null) {
+                    if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', PlaceholderAPI.setPlaceholders(player, commandMessage)));
+                    } else {
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', commandMessage));
+                    }
+                }
+            }
+            if (CommandsManager.get().getStringList("Commands." + cmd.getName()).isEmpty()) {
+                getLogger().info("The message assigned to the Commands does not exist.");
             }
         }
         return false;
     }
 
     public void registerCommands() {
-        if (commandMap == null && commandsList != null) {
-            try {
+        try {
+            if (commandsList != null) {
                 Constructor<PluginCommand> constructor = PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class);
                 constructor.setAccessible(true);
+                Field field = SimplePluginManager.class.getDeclaredField("commandMap");
+                field.setAccessible(true);
+                CommandMap commandMap = (CommandMap) field.get(getServer().getPluginManager());
                 for (String commandList : commandsList) {
                     PluginCommand pluginCommand = constructor.newInstance(commandList, this);
-                    Field field = SimplePluginManager.class.getDeclaredField("commandMap");
-                    field.setAccessible(true);
-                    commandMap = (CommandMap) field.get(getServer().getPluginManager());
                     commandMap.register(getDescription().getName(), pluginCommand);
                 }
-            } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException | NoSuchMethodException | InstantiationException | InvocationTargetException e) {
-                e.printStackTrace();
             }
+        } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException | NoSuchMethodException | InstantiationException | InvocationTargetException e) {
+            e.printStackTrace();
         }
     }
 
@@ -119,18 +132,18 @@ public final class UtilTool extends JavaPlugin implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         if (player.hasPlayedBefore()) {
-            if (join_message.contains("[NAME]")) {
-                message = join_message.replace("[NAME]", player.getDisplayName());
+            if (joinMessage.contains("[NAME]")) {
+                message = joinMessage.replace("[NAME]", player.getDisplayName());
                 event.setJoinMessage(ChatColor.translateAlternateColorCodes('&', message));
             } else {
-                event.setJoinMessage(ChatColor.translateAlternateColorCodes('&', join_message));
+                event.setJoinMessage(ChatColor.translateAlternateColorCodes('&', joinMessage));
             }
         } else {
-            if (first_time_join_message.contains("[NAME]")) {
-                message = first_time_join_message.replace("[NAME]", player.getDisplayName());
+            if (firstTimeJoinMessage.contains("[NAME]")) {
+                message = firstTimeJoinMessage.replace("[NAME]", player.getDisplayName());
                 event.setJoinMessage(ChatColor.translateAlternateColorCodes('&', message));
             } else {
-                event.setJoinMessage(ChatColor.translateAlternateColorCodes('&', first_time_join_message));
+                event.setJoinMessage(ChatColor.translateAlternateColorCodes('&', firstTimeJoinMessage));
             }
         }
     }
@@ -138,11 +151,11 @@ public final class UtilTool extends JavaPlugin implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onLeave(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        if (leave_message.contains("[NAME]")) {
-            message = leave_message.replace("[NAME]", player.getDisplayName());
+        if (leaveMessage.contains("[NAME]")) {
+            message = leaveMessage.replace("[NAME]", player.getDisplayName());
             event.setQuitMessage(ChatColor.translateAlternateColorCodes('&', message));
         } else {
-            event.setQuitMessage(ChatColor.translateAlternateColorCodes('&', leave_message));
+            event.setQuitMessage(ChatColor.translateAlternateColorCodes('&', leaveMessage));
         }
     }
 
@@ -166,12 +179,12 @@ public final class UtilTool extends JavaPlugin implements Listener {
     @EventHandler
     public void onPlayerInteractAtEntity(PlayerInteractEntityEvent event) {
         Player p = event.getPlayer();
-        List<String> rightclick_world = getConfig().getStringList("enable_world");
+        List<String> rightClickWorld = getConfig().getStringList("enable_world");
         if (event.getRightClicked().getType().equals(EntityType.PLAYER) && p.isSneaking()) {
-            if (rightclick_world.stream().anyMatch(current_world -> p.getWorld().equals(Bukkit.getWorld(current_world)))) {
-                String click_player_name = (event.getRightClicked()).getName();
-                String replaced_shift_right_click = (shift_right_click_command.replace("%player%", click_player_name));
-                p.performCommand(replaced_shift_right_click);
+            if (rightClickWorld.stream().anyMatch(current_world -> p.getWorld().equals(Bukkit.getWorld(current_world)))) {
+                String clickPlayerName = (event.getRightClicked()).getName();
+                String replacedShiftRightClick = (shiftRightClickCommand.replace("%player%", clickPlayerName));
+                p.performCommand(replacedShiftRightClick);
             }
         }
     }

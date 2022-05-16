@@ -2,6 +2,7 @@ name: UtilTool
 version: '${project.version}'
 main: net.teamuni.playerjoinandleave.UtilTool
 api-version: 1.17
+softdepend: [PlaceholderAPI]
 commands:
   utiltoolreload:
     permission: utiltool.reload
