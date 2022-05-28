@@ -57,6 +57,7 @@ public final class UtilTool extends JavaPlugin implements Listener {
             getLogger().info("The command does not exist in commands.yml.");
         }
         registerCommands();
+        getCommand("utiltool").setTabCompleter(new CommandTabCompleter());
     }
 
     @Override
