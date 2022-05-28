@@ -91,7 +91,7 @@ enable_world:
 
 
 ## Commands
-플러그인 리로드 하기: /utiltoolreload  
+플러그인 리로드 하기: /utiltool reload  
 스폰 지점 정하기: /setspawn  
 스폰으로 이동하기: /spawn
 ## Permissions
