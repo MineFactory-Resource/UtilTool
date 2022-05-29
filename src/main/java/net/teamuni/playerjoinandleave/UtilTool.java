@@ -68,6 +68,8 @@ public final class UtilTool extends JavaPlugin implements Listener {
                 Objects.requireNonNull(Bukkit.getPluginManager().getPlugin("UtilTool")).reloadConfig();
                 CommandsManager.reload();
                 CommandsManager.save();
+                commandsList = new ArrayList<>(CommandsManager.get().getConfigurationSection("Commands").getKeys(false));
+                registerCommands();
                 player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "UtilTool has been reloaded!");
                 return false;
             }
