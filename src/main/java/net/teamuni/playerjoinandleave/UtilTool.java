@@ -57,19 +57,27 @@ public final class UtilTool extends JavaPlugin implements Listener {
             getLogger().info("The command does not exist in commands.yml.");
         }
         registerCommands();
+        getCommand("utiltool").setTabCompleter(new CommandTabCompleter());
     }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, Command cmd, @NotNull String label, String[] args) {
         Player player = (Player) sender;
-        if (cmd.getName().equalsIgnoreCase("utiltoolreload") && player.hasPermission("utiltool.reload")) {
-            Bukkit.getPluginManager().disablePlugin(this);
-            Bukkit.getPluginManager().enablePlugin(this);
-            Objects.requireNonNull(Bukkit.getPluginManager().getPlugin("UtilTool")).reloadConfig();
-            CommandsManager.reload();
-            CommandsManager.save();
-            player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "UtilTool has been reloaded!");
-            return false;
+        if (cmd.getName().equalsIgnoreCase("utiltool")) {
+            if (args[0].equalsIgnoreCase("reload") && player.hasPermission("utiltool.reload")) {
+                Objects.requireNonNull(Bukkit.getPluginManager().getPlugin("UtilTool")).reloadConfig();
+                CommandsManager.reload();
+                CommandsManager.save();
+                try {
+                    commandsList = new ArrayList<>(CommandsManager.get().getConfigurationSection("Commands").getKeys(false));
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                    getLogger().info("The command does not exist in commands.yml.");
+                }
+                registerCommands();
+                player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "UtilTool has been reloaded!");
+                return false;
+            }
         }
         if (cmd.getName().equalsIgnoreCase("setspawn") && player.hasPermission("utiltool.setspawn")) {
             getConfig().set("spawnpoint.world", Objects.requireNonNull(player.getLocation().getWorld()).getName());
