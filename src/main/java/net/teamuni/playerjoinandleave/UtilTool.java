@@ -37,7 +37,6 @@ public final class UtilTool extends JavaPlugin implements Listener {
     String joinMessage = "";
     String leaveMessage = "";
     String firstTimeJoinMessage = "";
-    String message = "";
     List<String> commandsList;
     String shiftRightClickCommand = "";
 
