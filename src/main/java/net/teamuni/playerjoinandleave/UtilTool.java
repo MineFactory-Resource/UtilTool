@@ -140,31 +140,16 @@ public final class UtilTool extends JavaPlugin implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         if (player.hasPlayedBefore()) {
-            if (joinMessage.contains("[NAME]")) {
-                message = joinMessage.replace("[NAME]", player.getDisplayName());
-                event.setJoinMessage(ChatColor.translateAlternateColorCodes('&', message));
-            } else {
-                event.setJoinMessage(ChatColor.translateAlternateColorCodes('&', joinMessage));
-            }
+            event.setJoinMessage(ChatColor.translateAlternateColorCodes('&', PlaceholderAPI.setPlaceholders(player, joinMessage)));
         } else {
-            if (firstTimeJoinMessage.contains("[NAME]")) {
-                message = firstTimeJoinMessage.replace("[NAME]", player.getDisplayName());
-                event.setJoinMessage(ChatColor.translateAlternateColorCodes('&', message));
-            } else {
-                event.setJoinMessage(ChatColor.translateAlternateColorCodes('&', firstTimeJoinMessage));
-            }
+            event.setJoinMessage(ChatColor.translateAlternateColorCodes('&', PlaceholderAPI.setPlaceholders(player, firstTimeJoinMessage)));
         }
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onLeave(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        if (leaveMessage.contains("[NAME]")) {
-            message = leaveMessage.replace("[NAME]", player.getDisplayName());
-            event.setQuitMessage(ChatColor.translateAlternateColorCodes('&', message));
-        } else {
-            event.setQuitMessage(ChatColor.translateAlternateColorCodes('&', leaveMessage));
-        }
+        event.setQuitMessage(ChatColor.translateAlternateColorCodes('&', PlaceholderAPI.setPlaceholders(player, leaveMessage)));
     }
 
     @EventHandler
