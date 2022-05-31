@@ -68,7 +68,17 @@ public final class UtilTool extends JavaPlugin implements Listener {
                 saveConfig();
                 CommandsManager.reload();
                 CommandsManager.save();
-                onEnable();
+                try {
+                    commandsList = new ArrayList<>(CommandsManager.get().getConfigurationSection("Commands").getKeys(false));
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                    getLogger().info("The command does not exist in commands.yml.");
+                }
+                registerCommands();
+                joinMessage = getConfig().getString("join_message");
+                leaveMessage = getConfig().getString("leave_message");
+                firstTimeJoinMessage = getConfig().getString("first_time_join_message");
+                shiftRightClickCommand = getConfig().getString("shift_right_click_command");
                 player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "UtilTool has been reloaded!");
                 return false;
             }
