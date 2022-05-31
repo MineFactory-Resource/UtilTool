@@ -37,24 +37,15 @@ public final class UtilTool extends JavaPlugin implements Listener {
     String joinMessage = "";
     String leaveMessage = "";
     String firstTimeJoinMessage = "";
-    List<String> commandsList;
     String shiftRightClickCommand = "";
+    List<String> commandsList;
 
     @Override
     public void onEnable() {
         this.getServer().getPluginManager().registerEvents(this, this);
         this.saveDefaultConfig();
-        this.joinMessage = getConfig().getString("join_message");
-        this.leaveMessage = getConfig().getString("leave_message");
-        this.firstTimeJoinMessage = getConfig().getString("first_time_join_message");
-        this.shiftRightClickCommand = getConfig().getString("shift_right_click_command");
+        getConfigMessages();
         CommandsManager.createCommandsYml();
-        try {
-            this.commandsList = new ArrayList<>(CommandsManager.get().getConfigurationSection("Commands").getKeys(false));
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            getLogger().info("The command does not exist in commands.yml.");
-        }
         registerCommands();
         getCommand("utiltool").setTabCompleter(new CommandTabCompleter());
     }
@@ -66,19 +57,10 @@ public final class UtilTool extends JavaPlugin implements Listener {
             if (args[0].equalsIgnoreCase("reload") && player.hasPermission("utiltool.reload")) {
                 reloadConfig();
                 saveConfig();
+                getConfigMessages();
                 CommandsManager.reload();
                 CommandsManager.save();
-                try {
-                    commandsList = new ArrayList<>(CommandsManager.get().getConfigurationSection("Commands").getKeys(false));
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
-                    getLogger().info("The command does not exist in commands.yml.");
-                }
                 registerCommands();
-                joinMessage = getConfig().getString("join_message");
-                leaveMessage = getConfig().getString("leave_message");
-                firstTimeJoinMessage = getConfig().getString("first_time_join_message");
-                shiftRightClickCommand = getConfig().getString("shift_right_click_command");
                 player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "UtilTool has been reloaded!");
                 return false;
             }
@@ -124,6 +106,12 @@ public final class UtilTool extends JavaPlugin implements Listener {
 
     public void registerCommands() {
         try {
+            commandsList = new ArrayList<>(CommandsManager.get().getConfigurationSection("Commands").getKeys(false));
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            getLogger().info("The command does not exist in commands.yml.");
+        }
+        try {
             if (commandsList != null) {
                 Constructor<PluginCommand> constructor = PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class);
                 constructor.setAccessible(true);
@@ -138,6 +126,13 @@ public final class UtilTool extends JavaPlugin implements Listener {
         } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException | NoSuchMethodException | InstantiationException | InvocationTargetException e) {
             e.printStackTrace();
         }
+    }
+
+    public void getConfigMessages() {
+        joinMessage = getConfig().getString("join_message");
+        leaveMessage = getConfig().getString("leave_message");
+        firstTimeJoinMessage = getConfig().getString("first_time_join_message");
+        shiftRightClickCommand = getConfig().getString("shift_right_click_command");
     }
 
     @EventHandler(priority = EventPriority.HIGH)
