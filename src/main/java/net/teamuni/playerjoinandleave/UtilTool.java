@@ -37,25 +37,15 @@ public final class UtilTool extends JavaPlugin implements Listener {
     String joinMessage = "";
     String leaveMessage = "";
     String firstTimeJoinMessage = "";
-    String message = "";
-    List<String> commandsList;
     String shiftRightClickCommand = "";
+    List<String> commandsList;
 
     @Override
     public void onEnable() {
         this.getServer().getPluginManager().registerEvents(this, this);
         this.saveDefaultConfig();
-        this.joinMessage = getConfig().getString("join_message");
-        this.leaveMessage = getConfig().getString("leave_message");
-        this.firstTimeJoinMessage = getConfig().getString("first_time_join_message");
-        this.shiftRightClickCommand = getConfig().getString("shift_right_click_command");
+        getConfigMessages();
         CommandsManager.createCommandsYml();
-        try {
-            this.commandsList = new ArrayList<>(CommandsManager.get().getConfigurationSection("Commands").getKeys(false));
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            getLogger().info("The command does not exist in commands.yml.");
-        }
         registerCommands();
         getCommand("utiltool").setTabCompleter(new CommandTabCompleter());
     }
@@ -65,15 +55,11 @@ public final class UtilTool extends JavaPlugin implements Listener {
         Player player = (Player) sender;
         if (cmd.getName().equalsIgnoreCase("utiltool")) {
             if (args[0].equalsIgnoreCase("reload") && player.hasPermission("utiltool.reload")) {
-                Objects.requireNonNull(Bukkit.getPluginManager().getPlugin("UtilTool")).reloadConfig();
+                reloadConfig();
+                saveConfig();
+                getConfigMessages();
                 CommandsManager.reload();
                 CommandsManager.save();
-                try {
-                    commandsList = new ArrayList<>(CommandsManager.get().getConfigurationSection("Commands").getKeys(false));
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
-                    getLogger().info("The command does not exist in commands.yml.");
-                }
                 registerCommands();
                 player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "UtilTool has been reloaded!");
                 return false;
@@ -120,6 +106,12 @@ public final class UtilTool extends JavaPlugin implements Listener {
 
     public void registerCommands() {
         try {
+            commandsList = new ArrayList<>(CommandsManager.get().getConfigurationSection("Commands").getKeys(false));
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            getLogger().info("The command does not exist in commands.yml.");
+        }
+        try {
             if (commandsList != null) {
                 Constructor<PluginCommand> constructor = PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class);
                 constructor.setAccessible(true);
@@ -136,20 +128,25 @@ public final class UtilTool extends JavaPlugin implements Listener {
         }
     }
 
+    public void getConfigMessages() {
+        joinMessage = getConfig().getString("join_message");
+        leaveMessage = getConfig().getString("leave_message");
+        firstTimeJoinMessage = getConfig().getString("first_time_join_message");
+        shiftRightClickCommand = getConfig().getString("shift_right_click_command");
+    }
+
     @EventHandler(priority = EventPriority.HIGH)
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         if (player.hasPlayedBefore()) {
-            if (joinMessage.contains("[NAME]")) {
-                message = joinMessage.replace("[NAME]", player.getDisplayName());
-                event.setJoinMessage(ChatColor.translateAlternateColorCodes('&', message));
+            if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+                event.setJoinMessage(ChatColor.translateAlternateColorCodes('&', PlaceholderAPI.setPlaceholders(player, joinMessage)));
             } else {
                 event.setJoinMessage(ChatColor.translateAlternateColorCodes('&', joinMessage));
             }
         } else {
-            if (firstTimeJoinMessage.contains("[NAME]")) {
-                message = firstTimeJoinMessage.replace("[NAME]", player.getDisplayName());
-                event.setJoinMessage(ChatColor.translateAlternateColorCodes('&', message));
+            if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+                event.setJoinMessage(ChatColor.translateAlternateColorCodes('&', PlaceholderAPI.setPlaceholders(player, firstTimeJoinMessage)));
             } else {
                 event.setJoinMessage(ChatColor.translateAlternateColorCodes('&', firstTimeJoinMessage));
             }
@@ -159,9 +156,8 @@ public final class UtilTool extends JavaPlugin implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onLeave(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        if (leaveMessage.contains("[NAME]")) {
-            message = leaveMessage.replace("[NAME]", player.getDisplayName());
-            event.setQuitMessage(ChatColor.translateAlternateColorCodes('&', message));
+        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            event.setQuitMessage(ChatColor.translateAlternateColorCodes('&', PlaceholderAPI.setPlaceholders(player, leaveMessage)));
         } else {
             event.setQuitMessage(ChatColor.translateAlternateColorCodes('&', leaveMessage));
         }

@@ -2,18 +2,19 @@
 # join_message - 입장 메시지
 # leave_message - 퇴장 메시지
 
-# 플레이어의 이름을 가져오려면 [NAME]을 사용해 주세요.
-# 사용 예시:
-# join_message: "[NAME]님이 접속하셨습니다."
-# leave_message: "[NAME]님이 퇴장하셨습니다."
+# 메시지 기능은 PlaceholderAPI를 지원합니다.
 # 색을 사용하시려면 마인크래프트 색상 코드를 사용해 주세요.
 # 사용 예시:
-# join_message: "&e&l[NAME]&f님이 접속하셨습니다."
+# join_message: "&e&l환영합니다!"
 
-first_time_join_message: "&e&l[NAME]&f님이 서버에 처음 접속하셨습니다. 모두 환영해 주세요!"
-join_message: "&e&l[NAME]&f님이 접속하셨습니다. 어서오세요!"
-leave_message: "&e&l[NAME]&f님이 퇴장하셨습니다. 안녕히 가세요!"
-shift_right_click_command: "msg %player% Hello!"  # %player%는 쉬프트+우클릭한 사람의 닉네임입니다!
-enable_world: #플레이어를 쉬프트+우클릭 하면 명령어를 실행할 수 있는 월드를 지정합니다. 기본적으로 일반 월드와 지옥 월드가 설정되어 있습니다.
-  - "world"
-  - "world_nether"
+#쉬프트+우클릭 명령어에서 쉬프트+우클릭을 사용한 플레이어의 닉네임을 불러오려면 %player%를 통해 불러올 수 있습니다.
+# 사용 예시:
+# shift_right_click_command: "msg Hello, %player%!"
+#쉬프트+우클릭 기능을 사용할 월드 이름 리스트를 enable_world에 입력해 주세요.
+
+first_time_join_message: ""
+join_message: ""
+leave_message: ""
+shift_right_click_command: ""
+enable_world:
+  - ""
