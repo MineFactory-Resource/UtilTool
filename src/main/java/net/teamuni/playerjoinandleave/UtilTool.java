@@ -153,7 +153,7 @@ public final class UtilTool extends JavaPlugin implements Listener {
             } else {
                 event.setJoinMessage(ChatColor.translateAlternateColorCodes('&', firstTimeJoinMessage));
             }
-            List<String> playerUuidList = new ArrayList<>();
+            List<String> playerUuidList = PlayerUuidManager.get().getStringList("UUIDs");
             playerUuidList.add(player.getUniqueId().toString());
             PlayerUuidManager.get().set("UUIDs", playerUuidList);
             PlayerUuidManager.save();
