@@ -39,6 +39,7 @@ public final class UtilTool extends JavaPlugin implements Listener {
     String firstTimeJoinMessage = "";
     String shiftRightClickCommand = "";
     List<String> commandsList;
+    List<String> playerUuidList;
 
     @Override
     public void onEnable() {
@@ -49,6 +50,11 @@ public final class UtilTool extends JavaPlugin implements Listener {
         PlayerUuidManager.createCommandsYml();
         registerCommands();
         getCommand("utiltool").setTabCompleter(new CommandTabCompleter());
+    }
+
+    @Override
+    public void onDisable() {
+        PlayerUuidManager.save();
     }
 
     @Override
@@ -153,10 +159,9 @@ public final class UtilTool extends JavaPlugin implements Listener {
             } else {
                 event.setJoinMessage(ChatColor.translateAlternateColorCodes('&', firstTimeJoinMessage));
             }
-            List<String> playerUuidList = PlayerUuidManager.get().getStringList("UUIDs");
+            playerUuidList = PlayerUuidManager.get().getStringList("UUIDs");
             playerUuidList.add(player.getUniqueId().toString());
             PlayerUuidManager.get().set("UUIDs", playerUuidList);
-            PlayerUuidManager.save();
         }
     }
 
