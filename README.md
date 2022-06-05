@@ -32,6 +32,16 @@ leave_message - 퇴장 메시지
 ```yaml
 join_message: "&e&l환영합니다!"
 ```
+이 메시지 기능은 접속한 플레이어가 첫 입장인지 아닌지를 구별하기 위해 
+World 폴더의 playerdata 폴더에서 파일을 읽어오는 것이 아닌,
+UtilTool 플러그인 폴더안에 존재하는 players.yml의 UUIDs를 읽어옵니다.  
+따라서, UtilTool의 버전을 업데이트 할 시에 다음 과정을 따라야합니다.:  
+1. UtilTool 플러그인을 업데이트 하기 전, players.yml을 백업해 둡니다.
+2. 새로운 버전으로 업데이트 합니다.
+3. 서버를 연 후 접속을 합니다.
+4. 백업해둔 players.yml 파일을 새 players.yml 파일에 붙여넣기합니다.
+5. /utiltool reload 명령어를 통해 플러그인을 reload 합니다.
+6. 마지막으로, 플레이어들의 UUID들이 정상적으로 백업 되었는지 확인합니다.
 ### 스폰 기능
 /setspawn 명령어를 통해 현재 플레이어가 위치한 곳을 스폰 지점으로 지정할 수 있습니다.  
 /spawn 을 통해 지정한 스폰 지점으로 이동할 수 있습니다.  

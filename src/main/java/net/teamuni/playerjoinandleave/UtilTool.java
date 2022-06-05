@@ -46,8 +46,14 @@ public final class UtilTool extends JavaPlugin implements Listener {
         this.saveDefaultConfig();
         getConfigMessages();
         CommandsManager.createCommandsYml();
+        PlayerUuidManager.createCommandsYml();
         registerCommands();
         getCommand("utiltool").setTabCompleter(new CommandTabCompleter());
+    }
+
+    @Override
+    public void onDisable() {
+        PlayerUuidManager.save();
     }
 
     @Override
@@ -60,6 +66,8 @@ public final class UtilTool extends JavaPlugin implements Listener {
                 getConfigMessages();
                 CommandsManager.reload();
                 CommandsManager.save();
+                PlayerUuidManager.reload();
+                PlayerUuidManager.save();
                 registerCommands();
                 player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "UtilTool has been reloaded!");
                 return false;
@@ -138,7 +146,7 @@ public final class UtilTool extends JavaPlugin implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        if (player.hasPlayedBefore()) {
+        if (PlayerUuidManager.get().getStringList("UUIDs").contains(player.getUniqueId().toString())) {
             if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
                 event.setJoinMessage(ChatColor.translateAlternateColorCodes('&', PlaceholderAPI.setPlaceholders(player, joinMessage)));
             } else {
@@ -150,6 +158,9 @@ public final class UtilTool extends JavaPlugin implements Listener {
             } else {
                 event.setJoinMessage(ChatColor.translateAlternateColorCodes('&', firstTimeJoinMessage));
             }
+            List<String> playerUuidList = PlayerUuidManager.get().getStringList("UUIDs");
+            playerUuidList.add(player.getUniqueId().toString());
+            PlayerUuidManager.get().set("UUIDs", playerUuidList);
         }
     }
 

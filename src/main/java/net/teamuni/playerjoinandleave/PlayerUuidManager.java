@@ -7,34 +7,34 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.io.IOException;
 
-public class CommandsManager {
+public class PlayerUuidManager {
 
     private static final UtilTool main = UtilTool.getPlugin(UtilTool.class);
     private static File file;
-    private static FileConfiguration commandsFile;
+    private static FileConfiguration playersFile;
 
     public static void createCommandsYml() {
-        file = new File(Bukkit.getServer().getPluginManager().getPlugin("UtilTool").getDataFolder(), "commands.yml");
+        file = new File(Bukkit.getServer().getPluginManager().getPlugin("UtilTool").getDataFolder(), "players.yml");
 
         if (!file.exists()) {
-            main.saveResource("commands.yml", false);
+            main.saveResource("players.yml", false);
         }
-        commandsFile = YamlConfiguration.loadConfiguration(file);
+        playersFile = YamlConfiguration.loadConfiguration(file);
     }
 
     public static FileConfiguration get() {
-        return commandsFile;
+        return playersFile;
     }
 
     public static void save() {
         try {
-            commandsFile.save(file);
+            playersFile.save(file);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public static void reload() {
-        commandsFile = YamlConfiguration.loadConfiguration(file);
+        playersFile = YamlConfiguration.loadConfiguration(file);
     }
 }

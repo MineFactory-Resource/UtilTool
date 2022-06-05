@@ -12,9 +12,9 @@
 # shift_right_click_command: "msg Hello, %player%!"
 #쉬프트+우클릭 기능을 사용할 월드 이름 리스트를 enable_world에 입력해 주세요.
 
-first_time_join_message: ""
-join_message: ""
-leave_message: ""
+first_time_join_message: "(첫 입장 메시지)"
+join_message: "(입장 메시지)"
+leave_message: "(퇴장 메시지)"
 shift_right_click_command: ""
 enable_world:
   - ""
