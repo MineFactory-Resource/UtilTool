@@ -106,6 +106,17 @@ public final class UtilTool extends JavaPlugin implements Listener {
                 }
             }
         }
+        if (cmd.getName().equalsIgnoreCase("allchatclear") && player.hasPermission("utiltool.allchatclear")) {
+            int all_chat_clear_count = 0;
+            while (all_chat_clear_count < 100) {
+                all_chat_clear_count++;
+                getServer().broadcastMessage("");
+                if (all_chat_clear_count == 100) {
+                    player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "All Chat has been cleaned!");
+                    return false;
+                }
+            }
+        }
         if (commandsList != null && commandsList.contains(cmd.getName())) {
             for (String commandMessage : CommandsManager.get().getStringList("Commands." + cmd.getName())) {
                 if (commandMessage != null) {
