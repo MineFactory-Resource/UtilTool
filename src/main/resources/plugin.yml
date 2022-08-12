@@ -10,6 +10,10 @@ commands:
     permission: utiltool.spawn
   setspawn:
     permission: utiltool.setspawn
+  mychatclear:
+    permission: utiltool.mychatclear
+  allchatclear:
+    permission: utiltool.allchatclear
 permissions:
   utiltool.reload:
     default: op
