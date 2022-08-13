@@ -96,26 +96,18 @@ public final class UtilTool extends JavaPlugin implements Listener {
             return false;
         }
         if (cmd.getName().equalsIgnoreCase("채팅청소") && player.hasPermission("utiltool.mychatclear")) {
-            int myChatClearCount = 0;
-            while (myChatClearCount < 100) {
-                myChatClearCount++;
+            for (int myChatClearCount = 0; myChatClearCount < 100; myChatClearCount++) {
                 player.sendMessage("");
-                if (myChatClearCount == 100) {
-                    player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "Your chat has been cleaned!");
-                    return false;
-                }
             }
+            player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "Your chat has been cleaned!");
+            return false;
         }
         if (cmd.getName().equalsIgnoreCase("전체채팅청소") && player.hasPermission("utiltool.allchatclear")) {
-            int allChatClearCount = 0;
-            while (allChatClearCount < 100) {
-                allChatClearCount++;
+            for (int allChatClearCount = 0; allChatClearCount < 100; allChatClearCount++) {
                 getServer().broadcastMessage("");
-                if (allChatClearCount == 100) {
-                    player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "All Chat has been cleaned!");
-                    return false;
-                }
             }
+            player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "All Chat has been cleaned!");
+            return false;
         }
         if (commandsList != null && commandsList.contains(cmd.getName())) {
             for (String commandMessage : CommandsManager.get().getStringList("Commands." + cmd.getName())) {
