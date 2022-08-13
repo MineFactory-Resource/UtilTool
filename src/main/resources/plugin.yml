@@ -10,9 +10,9 @@ commands:
     permission: utiltool.spawn
   setspawn:
     permission: utiltool.setspawn
-  mychatclear:
+  채팅청소:
     permission: utiltool.mychatclear
-  allchatclear:
+  전체채팅청소:
     permission: utiltool.allchatclear
 permissions:
   utiltool.reload:
