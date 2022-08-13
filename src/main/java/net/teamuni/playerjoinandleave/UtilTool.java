@@ -95,6 +95,20 @@ public final class UtilTool extends JavaPlugin implements Listener {
             player.teleport(new Location(world, x, y, z, yaw, pitch));
             return false;
         }
+        if (cmd.getName().equalsIgnoreCase("채팅청소") && player.hasPermission("utiltool.mychatclear")) {
+            for (int myChatClearCount = 0; myChatClearCount < 100; myChatClearCount++) {
+                player.sendMessage("");
+            }
+            player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "Your chat has been cleaned!");
+            return false;
+        }
+        if (cmd.getName().equalsIgnoreCase("전체채팅청소") && player.hasPermission("utiltool.allchatclear")) {
+            for (int allChatClearCount = 0; allChatClearCount < 100; allChatClearCount++) {
+                getServer().broadcastMessage("");
+            }
+            player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "All Chat has been cleaned!");
+            return false;
+        }
         if (commandsList != null && commandsList.contains(cmd.getName())) {
             for (String commandMessage : CommandsManager.get().getStringList("Commands." + cmd.getName())) {
                 if (commandMessage != null) {
