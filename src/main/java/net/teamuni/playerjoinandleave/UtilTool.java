@@ -95,23 +95,23 @@ public final class UtilTool extends JavaPlugin implements Listener {
             player.teleport(new Location(world, x, y, z, yaw, pitch));
             return false;
         }
-        if (cmd.getName().equalsIgnoreCase("mychatclear") && player.hasPermission("utiltool.mychatclear")) {
-            int my_chat_clear_count = 0;
-            while (my_chat_clear_count < 100) {
-                my_chat_clear_count++;
+        if (cmd.getName().equalsIgnoreCase("채팅청소") && player.hasPermission("utiltool.mychatclear")) {
+            int myChatClearCount = 0;
+            while (myChatClearCount < 100) {
+                myChatClearCount++;
                 player.sendMessage("");
-                if (my_chat_clear_count == 100) {
+                if (myChatClearCount == 100) {
                     player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "Your chat has been cleaned!");
                     return false;
                 }
             }
         }
-        if (cmd.getName().equalsIgnoreCase("allchatclear") && player.hasPermission("utiltool.allchatclear")) {
-            int all_chat_clear_count = 0;
-            while (all_chat_clear_count < 100) {
-                all_chat_clear_count++;
+        if (cmd.getName().equalsIgnoreCase("전체채팅청소") && player.hasPermission("utiltool.allchatclear")) {
+            int allChatClearCount = 0;
+            while (allChatClearCount < 100) {
+                allChatClearCount++;
                 getServer().broadcastMessage("");
-                if (all_chat_clear_count == 100) {
+                if (allChatClearCount == 100) {
                     player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "All Chat has been cleaned!");
                     return false;
                 }
