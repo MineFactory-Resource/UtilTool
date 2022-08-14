@@ -20,6 +20,17 @@ public class CommandTabCompleter implements TabCompleter {
             }
             return tabCompleteList;
         }
+        for (String commandList : CommandsManager.get().getConfigurationSection("Commands").getKeys(false)) {
+            if (command.getName().equalsIgnoreCase(commandList)) {
+                List<String> tabCompleteList = new ArrayList<>();
+                if (args.length == 1) {
+                    for (int i = 1; i <= CommandsManager.get().getConfigurationSection("Commands." + command.getName()).getKeys(false).size(); i++) {
+                        tabCompleteList.add(String.valueOf(i));
+                    }
+                }
+                return tabCompleteList;
+            }
+        }
         return null;
     }
 }
