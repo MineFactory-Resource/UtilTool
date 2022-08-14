@@ -120,17 +120,19 @@ public final class UtilTool extends JavaPlugin implements Listener {
                         }
                     }
                 }
-                List<String> childOfCommandMessage = new ArrayList<>(CommandsManager.get().getConfigurationSection("Commands." + cmd.getName()).getKeys(false));
-                if (!childOfCommandMessage.isEmpty()) {
-                    if (childOfCommandMessage.contains(args[0])) {
-                        for (String messageOfChild : CommandsManager.get().getStringList("Commands." + cmd.getName() + "." + args[0]))
-                            if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-                                player.sendMessage(ChatColor.translateAlternateColorCodes('&', PlaceholderAPI.setPlaceholders(player, messageOfChild)));
-                            } else {
-                                player.sendMessage(ChatColor.translateAlternateColorCodes('&', messageOfChild));
-                            }
-                    } else {
-                        player.sendMessage(ChatColor.RED + "The page you entered does not exist.");
+                if (args.length == 1) {
+                    List<String> childOfCommandMessage = new ArrayList<>(CommandsManager.get().getConfigurationSection("Commands." + cmd.getName()).getKeys(false));
+                    if (!childOfCommandMessage.isEmpty()) {
+                        if (childOfCommandMessage.contains(args[0])) {
+                            for (String messageOfChild : CommandsManager.get().getStringList("Commands." + cmd.getName() + "." + args[0]))
+                                if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+                                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', PlaceholderAPI.setPlaceholders(player, messageOfChild)));
+                                } else {
+                                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', messageOfChild));
+                                }
+                        } else {
+                            player.sendMessage(ChatColor.RED + "The page you entered does not exist.");
+                        }
                     }
                 }
             }
