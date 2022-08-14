@@ -109,19 +109,33 @@ public final class UtilTool extends JavaPlugin implements Listener {
             player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "All Chat has been cleaned!");
             return false;
         }
-        if (commandsList != null && commandsList.contains(cmd.getName())) {
-            for (String commandMessage : CommandsManager.get().getStringList("Commands." + cmd.getName())) {
-                if (commandMessage != null) {
-                    if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', PlaceholderAPI.setPlaceholders(player, commandMessage)));
+        try {
+            if (commandsList != null && commandsList.contains(cmd.getName())) {
+                for (String commandMessage : CommandsManager.get().getStringList("Commands." + cmd.getName())) {
+                    if (commandMessage != null) {
+                        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+                            player.sendMessage(ChatColor.translateAlternateColorCodes('&', PlaceholderAPI.setPlaceholders(player, commandMessage)));
+                        } else {
+                            player.sendMessage(ChatColor.translateAlternateColorCodes('&', commandMessage));
+                        }
+                    }
+                }
+                List<String> childOfCommandMessage = new ArrayList<>(CommandsManager.get().getConfigurationSection("Commands." + cmd.getName()).getKeys(false));
+                if (!childOfCommandMessage.isEmpty()) {
+                    if (childOfCommandMessage.contains(args[0])) {
+                        for (String messageOfChild : CommandsManager.get().getStringList("Commands." + cmd.getName() + "." + args[0]))
+                            if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+                                player.sendMessage(ChatColor.translateAlternateColorCodes('&', PlaceholderAPI.setPlaceholders(player, messageOfChild)));
+                            } else {
+                                player.sendMessage(ChatColor.translateAlternateColorCodes('&', messageOfChild));
+                            }
                     } else {
-                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', commandMessage));
+                        player.sendMessage(ChatColor.RED + "The page you entered does not exist.");
                     }
                 }
             }
-            if (CommandsManager.get().getStringList("Commands." + cmd.getName()).isEmpty()) {
-                getLogger().info("The message assigned to the Commands does not exist.");
-            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
         }
         return false;
     }
