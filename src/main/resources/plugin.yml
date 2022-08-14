@@ -21,3 +21,5 @@ permissions:
     default: true
   utiltool.setspawn:
     default: op
+  utiltool.allchatclear:
+    default: op
