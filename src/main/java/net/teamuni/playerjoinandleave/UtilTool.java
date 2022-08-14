@@ -49,6 +49,7 @@ public final class UtilTool extends JavaPlugin implements Listener {
         PlayerUuidManager.createCommandsYml();
         registerCommands();
         getCommand("utiltool").setTabCompleter(new CommandTabCompleter());
+        getCommand(Objects.requireNonNull(getConfig().getString("faq"))).setTabCompleter(new CommandTabCompleter());
     }
 
     @Override
