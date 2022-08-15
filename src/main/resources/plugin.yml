@@ -14,6 +14,8 @@ commands:
     permission: utiltool.mychatclear
   전체채팅청소:
     permission: utiltool.allchatclear
+  확성기:
+    permission: utiltool.broadcaster
 permissions:
   utiltool.reload:
     default: op
@@ -21,3 +23,9 @@ permissions:
     default: true
   utiltool.setspawn:
     default: op
+  utiltool.mychatclear:
+    default: true
+  utiltool.allchatclear:
+    default: op
+  utiltool.broadcaster:
+    default: true
