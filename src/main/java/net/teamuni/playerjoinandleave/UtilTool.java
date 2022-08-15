@@ -128,6 +128,9 @@ public final class UtilTool extends JavaPlugin implements Listener {
                 player.sendMessage("§a[UtilTool] §f확성기 재사용 까지 §a" + BroadCasterCooldown.getCooldown(player) + "§f초 남았습니다");
             }
         }
+        else{
+            player.sendMessage("§c[UtilTool] 권한이 없습니다!");
+        }
         if (commandsList != null && commandsList.contains(cmd.getName())) {
             for (String commandMessage : CommandsManager.get().getStringList("Commands." + cmd.getName())) {
                 if (commandMessage != null) {
