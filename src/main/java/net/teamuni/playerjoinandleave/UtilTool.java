@@ -40,6 +40,7 @@ public final class UtilTool extends JavaPlugin implements Listener {
     String shiftRightClickCommand = "";
     List<String> commandsList;
 
+
     @Override
     public void onEnable() {
         this.getServer().getPluginManager().registerEvents(this, this);
@@ -48,6 +49,7 @@ public final class UtilTool extends JavaPlugin implements Listener {
         CommandsManager.createCommandsYml();
         PlayerUuidManager.createCommandsYml();
         registerCommands();
+        BroadCasterCooldown.setupCooldown();
         getCommand("utiltool").setTabCompleter(new CommandTabCompleter());
     }
 
@@ -108,6 +110,26 @@ public final class UtilTool extends JavaPlugin implements Listener {
             }
             player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "All Chat has been cleaned!");
             return false;
+        }
+        if (cmd.getName().equalsIgnoreCase("확성기") && player.hasPermission("utiltool.broadcaster")) {
+            String lore = String.join(" ",Arrays.copyOfRange(args, 0, args.length));
+            if(BroadCasterCooldown.checkCooldown(player)){
+                if(args.length > 0) {
+                    Bukkit.broadcastMessage("");
+                    Bukkit.broadcastMessage("§6[§f " + player.getName() + " §6] §b" + lore);
+                    Bukkit.broadcastMessage("");
+                    BroadCasterCooldown.setCooldown(player, 300);
+                }
+                else{
+                    player.sendMessage("§c[UtilTool] 사용법: /확성기 <메세지>");
+                }
+            }
+            else{
+                player.sendMessage("§a[UtilTool] §f확성기 재사용 까지 §a" + BroadCasterCooldown.getCooldown(player) + "§f초 남았습니다");
+            }
+        }
+        else{
+            player.sendMessage("§c[UtilTool] 권한이 없습니다!");
         }
         if (commandsList != null && commandsList.contains(cmd.getName())) {
             for (String commandMessage : CommandsManager.get().getStringList("Commands." + cmd.getName())) {
