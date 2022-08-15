@@ -52,6 +52,8 @@ commands.yml을 통해 설정한 특정 명령어를 입력할 경우 할당된 
 ### 채팅청소 기능
 /채팅청소 명령어를 통해 자신의 채팅창을 청소합니다. (타인의 채팅창은 청소되지 않음.)
 /전체채팅청소 명령어를 통해 전체의 채팅창을 청소합니다. (관리자 전용)
+### 확성기 기능
+/확성기 명령어를 통해 자신의 채팅을 강조를 할 수 있습니다. (쿨타임 5분)
 
 사용 예시:
 ```yaml
@@ -96,17 +98,36 @@ enable_world:
 ```
 
 
+
 ## Commands
 플러그인 리로드 하기: /utiltool reload  
 스폰 지점 정하기: /setspawn  
+<<<<<<< HEAD
+스폰으로 이동하기: /spawn, /tmvhs, /스폰, /넴주  
+개인 채팅 청소: /채팅청소  
+전체 채팅 청소: /전체채팅청소  
+=======
 스폰으로 이동하기: /spawn, /tmvhs, /스폰, /넴주
 개인 채팅 청소: /채팅청소
 전체 채팅 청소: /전체채팅청소
+>>>>>>> main
 확성기 사용: /확성기
 ## Permissions
 ```yaml
 utiltool.reload:
   default: op
+<<<<<<< HEAD
+utiltool.spawn:
+  default: true
+utiltool.setspawn:
+  default: op
+utiltool.mychatclear:
+  default: true
+utiltool.allchatclear:
+  default: op
+utiltool.broadcaster:
+  default: true
+=======
   utiltool.spawn:
     default: true
   utiltool.setspawn:
@@ -117,4 +138,5 @@ utiltool.reload:
     default: op
   utiltool.broadcaster:
     default: true
+>>>>>>> main
 ```
