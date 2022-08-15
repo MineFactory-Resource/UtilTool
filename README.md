@@ -99,13 +99,22 @@ enable_world:
 ## Commands
 플러그인 리로드 하기: /utiltool reload  
 스폰 지점 정하기: /setspawn  
-스폰으로 이동하기: /spawn
+스폰으로 이동하기: /spawn, /tmvhs, /스폰, /넴주
+개인 채팅 청소: /채팅청소
+전체 채팅 청소: /전체채팅청소
+확성기 사용: /확성기
 ## Permissions
 ```yaml
 utiltool.reload:
   default: op
-utiltool.spawn:
-  default: true
-utiltool.setspawn:
-  default: op
+  utiltool.spawn:
+    default: true
+  utiltool.setspawn:
+    default: op
+  utiltool.mychatclear:
+    default: true
+  utiltool.allchatclear:
+    default: op
+  utiltool.broadcaster:
+    default: true
 ```
