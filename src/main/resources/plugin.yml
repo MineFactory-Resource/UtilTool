@@ -8,6 +8,12 @@ commands:
     permission: utiltool.reload
   spawn:
     permission: utiltool.spawn
+  tmvhs:
+    permission: utiltool.spawn
+  스폰:
+    permission: utiltool.spawn
+  넴주:
+    permission: utiltool.spawn
   setspawn:
     permission: utiltool.setspawn
   채팅청소:

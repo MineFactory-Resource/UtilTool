@@ -61,6 +61,8 @@ public final class UtilTool extends JavaPlugin implements Listener {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, Command cmd, @NotNull String label, String[] args) {
         Player player = (Player) sender;
+        String[] spawn = {"spawn", "tmvhs", "스폰", "넴주"};
+
         if (cmd.getName().equalsIgnoreCase("utiltool")) {
             if (args[0].equalsIgnoreCase("reload") && player.hasPermission("utiltool.reload")) {
                 reloadConfig();
@@ -86,7 +88,7 @@ public final class UtilTool extends JavaPlugin implements Listener {
             player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "Respawn point has been set!");
             return false;
         }
-        if (cmd.getName().equalsIgnoreCase("spawn") && player.hasPermission("utiltool.spawn")) {
+        if (Arrays.asList(spawn).contains(cmd.getName()) && player.hasPermission("utiltool.spawn")) {
             World world = Bukkit.getServer().getWorld(Objects.requireNonNull(getConfig().getString("spawnpoint.world")));
             double x = getConfig().getDouble("spawnpoint.x");
             double y = getConfig().getDouble("spawnpoint.y");
