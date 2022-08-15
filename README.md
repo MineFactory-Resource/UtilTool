@@ -105,10 +105,6 @@ enable_world:
 스폰으로 이동하기: /spawn, /tmvhs, /스폰, /넴주  
 개인 채팅 청소: /채팅청소  
 전체 채팅 청소: /전체채팅청소  
-스폰으로 이동하기: /spawn, /tmvhs, /스폰, /넴주  
-개인 채팅 청소: /채팅청소  
-전체 채팅 청소: /전체채팅청소  
-확성기 사용: /확성기
 ## Permissions
 ```yaml
 utiltool.reload:
