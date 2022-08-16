@@ -62,6 +62,7 @@ public final class UtilTool extends JavaPlugin implements Listener {
     public boolean onCommand(@NotNull CommandSender sender, Command cmd, @NotNull String label, String[] args) {
         Player player = (Player) sender;
         String[] spawn = {"spawn", "tmvhs", "스폰", "넴주"};
+        String[] whisper = {"귓", "귓속말", "rnlt" , "rnltthrakf" , "r" , "w" , "m" , "msg" , "whisper"};
 
         if (cmd.getName().equalsIgnoreCase("utiltool")) {
             if (args[0].equalsIgnoreCase("reload") && player.hasPermission("utiltool.reload")) {
@@ -113,6 +114,27 @@ public final class UtilTool extends JavaPlugin implements Listener {
             player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "All Chat has been cleaned!");
             return false;
         }
+
+        if (Arrays.asList(whisper).contains(cmd.getName()) && player.hasPermission("utiltool.whisper")) {
+            if(args.length > 0) {
+                if (Bukkit.getPlayer(args[0]) != null) {
+                    if (args.length > 1) {
+                        Player target = player.getServer().getPlayer(args[0]);
+                        String playerName = player.getName();
+                        String targetPlayerName = player.getServer().getPlayer(args[0]).getName();
+                        String targetMsg = String.join(" ",Arrays.copyOfRange(args, 1, args.length));
+                        target.sendMessage("§e[ §6" + playerName + " §f→ §c나 §e]§f "  + targetMsg);
+                        player.sendMessage("§e[ §c나" + " §f→ §6" + targetPlayerName + " §e]§f " + targetMsg);
+                    }
+                    else {
+                        player.sendMessage("§c[UtilTool] 상대방에게 보낼 귓속말이 없습니다!");
+                    }
+                }
+                else {
+                    player.sendMessage("§c[UtilTool] 서버에 존재하지 않는 플레이어입니다!" );
+                }
+            }
+        }
         if (cmd.getName().equalsIgnoreCase("확성기") && player.hasPermission("utiltool.broadcaster")) {
             String lore = String.join(" ",Arrays.copyOfRange(args, 0, args.length));
             if(BroadCasterCooldown.checkCooldown(player)){
@@ -130,9 +152,7 @@ public final class UtilTool extends JavaPlugin implements Listener {
                 player.sendMessage("§a[UtilTool] §f확성기 재사용 까지 §a" + BroadCasterCooldown.getCooldown(player) + "§f초 남았습니다");
             }
         }
-        else{
-            player.sendMessage("§c[UtilTool] 권한이 없습니다!");
-        }
+
         if (commandsList != null && commandsList.contains(cmd.getName())) {
             for (String commandMessage : CommandsManager.get().getStringList("Commands." + cmd.getName())) {
                 if (commandMessage != null) {

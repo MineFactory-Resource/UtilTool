@@ -22,6 +22,24 @@ commands:
     permission: utiltool.allchatclear
   확성기:
     permission: utiltool.broadcaster
+  귓:
+    permission: utiltool.whisper
+  귓속말:
+    permission: utiltool.whisper
+  rnlt:
+    permission: utiltool.whisper
+  rnltthrakf:
+    permission: utiltool.whisper
+  r:
+    permission: utiltool.whisper
+  m:
+    permission: utiltool.whisper
+  msg:
+    permission: utiltool.whisper
+  w:
+    permission: utiltool.whisper
+  whisper:
+    permission: utiltool.whisper
 permissions:
   utiltool.reload:
     default: op
@@ -34,4 +52,6 @@ permissions:
   utiltool.allchatclear:
     default: op
   utiltool.broadcaster:
+    default: true
+  utiltool.whisper:
     default: true
