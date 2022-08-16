@@ -116,15 +116,13 @@ public final class UtilTool extends JavaPlugin implements Listener {
         }
 
         if (Arrays.asList(whisper).contains(cmd.getName()) && player.hasPermission("utiltool.whisper")) {
+            Player target = Bukkit.getPlayer(args[0]);
             if(args.length > 0) {
-                if (Bukkit.getPlayer(args[0]) != null) {
+                if (target != null) {
                     if (args.length > 1) {
-                        Player target = player.getServer().getPlayer(args[0]);
-                        String playerName = player.getName();
-                        String targetPlayerName = player.getServer().getPlayer(args[0]).getName();
                         String targetMsg = String.join(" ",Arrays.copyOfRange(args, 1, args.length));
-                        target.sendMessage("§e[ §6" + playerName + " §f→ §c나 §e]§f "  + targetMsg);
-                        player.sendMessage("§e[ §c나" + " §f→ §6" + targetPlayerName + " §e]§f " + targetMsg);
+                        target.sendMessage("§e[ §6" + player.getName() + " §f→ §c나 §e]§f "  + targetMsg);
+                        player.sendMessage("§e[ §c나" + " §f→ §6" + target.getName() + " §e]§f " + targetMsg);
                     }
                     else {
                         player.sendMessage("§c[UtilTool] 상대방에게 보낼 귓속말이 없습니다!");
