@@ -117,20 +117,18 @@ public final class UtilTool extends JavaPlugin implements Listener {
 
         if (Arrays.asList(whisper).contains(cmd.getName()) && player.hasPermission("utiltool.whisper")) {
             Player target = Bukkit.getPlayer(args[0]);
-            if(args.length > 0) {
-                if (target != null) {
-                    if (args.length > 1) {
-                        String targetMsg = String.join(" ",Arrays.copyOfRange(args, 1, args.length));
-                        target.sendMessage("§e[ §6" + player.getName() + " §f→ §c나 §e]§f "  + targetMsg);
-                        player.sendMessage("§e[ §c나" + " §f→ §6" + target.getName() + " §e]§f " + targetMsg);
-                    }
-                    else {
-                        player.sendMessage("§c[UtilTool] 상대방에게 보낼 귓속말이 없습니다!");
-                    }
+            if (target != null) {
+                if (args.length > 1) {
+                    String targetMsg = String.join(" ",Arrays.copyOfRange(args, 1, args.length));
+                    target.sendMessage("§e[ §6" + player.getName() + " §f→ §c나 §e]§f "  + targetMsg);
+                    player.sendMessage("§e[ §c나" + " §f→ §6" + target.getName() + " §e]§f " + targetMsg);
                 }
                 else {
-                    player.sendMessage("§c[UtilTool] 서버에 존재하지 않는 플레이어입니다!" );
+                    player.sendMessage("§c[UtilTool] 상대방에게 보낼 귓속말이 없습니다!");
                 }
+            }
+            else {
+                player.sendMessage("§c[UtilTool] 서버에 존재하지 않는 플레이어입니다!" );
             }
         }
         if (cmd.getName().equalsIgnoreCase("확성기") && player.hasPermission("utiltool.broadcaster")) {
