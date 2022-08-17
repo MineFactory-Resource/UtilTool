@@ -62,7 +62,7 @@ public final class UtilTool extends JavaPlugin implements Listener {
     public boolean onCommand(@NotNull CommandSender sender, Command cmd, @NotNull String label, String[] args) {
         Player player = (Player) sender;
         String[] spawn = {"spawn", "tmvhs", "스폰", "넴주"};
-        String[] whisper = {"귓", "귓속말", "rnlt" , "rnltthrakf" , "r" , "w" , "m" , "msg" , "whisper"};
+        String[] whisper = {"귓", "귓속말", "rnlt", "rnltthrakf", "r", "w", "m", "msg", "whisper"};
 
         if (cmd.getName().equalsIgnoreCase("utiltool")) {
             if (args[0].equalsIgnoreCase("reload") && player.hasPermission("utiltool.reload")) {
@@ -119,32 +119,28 @@ public final class UtilTool extends JavaPlugin implements Listener {
             Player target = Bukkit.getPlayer(args[0]);
             if (target != null) {
                 if (args.length > 1) {
-                    String targetMsg = String.join(" ",Arrays.copyOfRange(args, 1, args.length));
-                    target.sendMessage("§e[ §6" + player.getName() + " §f→ §c나 §e]§f "  + targetMsg);
+                    String targetMsg = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
+                    target.sendMessage("§e[ §6" + player.getName() + " §f→ §c나 §e]§f " + targetMsg);
                     player.sendMessage("§e[ §c나" + " §f→ §6" + target.getName() + " §e]§f " + targetMsg);
-                }
-                else {
+                } else {
                     player.sendMessage("§c[UtilTool] 상대방에게 보낼 귓속말이 없습니다!");
                 }
-            }
-            else {
-                player.sendMessage("§c[UtilTool] 서버에 존재하지 않는 플레이어입니다!" );
+            } else {
+                player.sendMessage("§c[UtilTool] 서버에 존재하지 않는 플레이어입니다!");
             }
         }
         if (cmd.getName().equalsIgnoreCase("확성기") && player.hasPermission("utiltool.broadcaster")) {
-            String lore = String.join(" ",Arrays.copyOfRange(args, 0, args.length));
-            if(BroadCasterCooldown.checkCooldown(player)){
-                if(args.length > 0) {
+            String lore = String.join(" ", Arrays.copyOfRange(args, 0, args.length));
+            if (BroadCasterCooldown.checkCooldown(player)) {
+                if (args.length > 0) {
                     Bukkit.broadcastMessage("");
                     Bukkit.broadcastMessage("§6[§f " + player.getName() + " §6] §b" + lore);
                     Bukkit.broadcastMessage("");
                     BroadCasterCooldown.setCooldown(player, 300);
-                }
-                else{
+                } else {
                     player.sendMessage("§c[UtilTool] 사용법: /확성기 <메세지>");
                 }
-            }
-            else{
+            } else {
                 player.sendMessage("§a[UtilTool] §f확성기 재사용 까지 §a" + BroadCasterCooldown.getCooldown(player) + "§f초 남았습니다");
             }
         }
@@ -185,7 +181,8 @@ public final class UtilTool extends JavaPlugin implements Listener {
                     commandMap.register(getDescription().getName(), pluginCommand);
                 }
             }
-        } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException | NoSuchMethodException | InstantiationException | InvocationTargetException e) {
+        } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException |
+                 NoSuchMethodException | InstantiationException | InvocationTargetException e) {
             e.printStackTrace();
         }
     }
