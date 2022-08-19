@@ -8,12 +8,7 @@ commands:
     permission: utiltool.reload
   spawn:
     permission: utiltool.spawn
-  tmvhs:
-    permission: utiltool.spawn
-  스폰:
-    permission: utiltool.spawn
-  넴주:
-    permission: utiltool.spawn
+    aliases: [tmvhs, 스폰, 넴주]
   setspawn:
     permission: utiltool.setspawn
   채팅청소:
@@ -22,24 +17,9 @@ commands:
     permission: utiltool.allchatclear
   확성기:
     permission: utiltool.broadcaster
-  귓:
-    permission: utiltool.whisper
-  귓속말:
-    permission: utiltool.whisper
-  rnlt:
-    permission: utiltool.whisper
-  rnltthrakf:
-    permission: utiltool.whisper
-  r:
-    permission: utiltool.whisper
-  m:
-    permission: utiltool.whisper
-  msg:
-    permission: utiltool.whisper
-  w:
-    permission: utiltool.whisper
   whisper:
     permission: utiltool.whisper
+    aliases: [귓, 귓속말, rnlt, rnltthrakf, r, m, msg, w]
 permissions:
   utiltool.reload:
     default: op
