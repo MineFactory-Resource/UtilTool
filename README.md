@@ -45,15 +45,15 @@ UtilTool 플러그인 폴더안에 존재하는 players.yml의 UUIDs를 읽어�
 /setspawn 명령어를 통해 현재 플레이어가 위치한 곳을 스폰 지점으로 지정할 수 있습니다.  
 /spawn, /tmvhs, /스폰, /넴주 명령어를 통해 지정한 스폰 지점으로 이동할 수 있습니다.  
 ### VOID 방지 기능
-플레이어가 세계 밖(y: 0)으로 떨어졌을 때 스폰으로 텔레포트됩니다.  
-### 커스텀 메시지 명령어 기능
-commands.yml을 통해 설정한 특정 명령어를 입력할 경우 할당된 메시지를 전송합니다.  
-커스텀 메시지 명령어 기능은 PlaceholderAPI를 지원합니다.
+플레이어가 세계 밖(y: 0)으로 떨어졌을 때 스폰으로 텔레포트됩니다.
 ### 채팅청소 기능
 /채팅청소 명령어를 통해 자신의 채팅창을 청소합니다. (타인의 채팅창은 청소되지 않음.)
 /전체채팅청소 명령어를 통해 전체의 채팅창을 청소합니다. (관리자 전용)
 ### 확성기 기능
-/확성기 명령어를 통해 자신의 채팅을 강조를 할 수 있습니다. (쿨타임 5분)
+/확성기 명령어를 통해 자신의 채팅을 강조를 할 수 있습니다. (쿨타임 5분)  
+### 커스텀 메시지 명령어 기능
+commands.yml을 통해 설정한 특정 명령어를 입력할 경우 할당된 메시지를 전송합니다.  
+커스텀 메시지 명령어 기능은 PlaceholderAPI를 지원합니다.
 
 사용 예시:
 ```yaml
@@ -81,7 +81,7 @@ Commands:
 ### 쉬프트+우클릭 명령어 기능
 다른 플레이어에게 웅크린채로 우클릭을 하면 설정한 명령어가 실행되는 기능입니다.
 config.yml 양식은 아래와 같습니다.
-```
+```yaml
 shift_right_click_command: ""
 enable_world: ""
 ```
@@ -89,14 +89,24 @@ shift_right_click_command - 다른 플레이어에게 웅크린채로 우클릭�
 enable_world - 해당 기능을 쓸 수 있는 월드 리스트.
 클릭당한 플레이어의 이름을 가져오려면 %player%를 사용해 주세요.
 
-사용 예시 :
-```
+사용 예시:
+```yaml
 shift_right_click_command: "msg %player% Hello!"
 enable_world:
   - "world"
   - "world_nether"
 ```
 
+###잠수맵 이동
+/잠수 명령어 입력 시 config.yml의 move_to_afk_command에 할당된 명령어가 실행됩니다.  
+플레이어의 닉네임을 가져오시려면 PlaceholderAPI를 이용해 주세요.
+```yaml
+move_to_afk_command: ""
+```
+사용 예시:
+```yaml
+move_to_afk_command: "/mv tp %player_name% AfkWorld"
+```
 
 
 ## Commands
@@ -105,18 +115,24 @@ enable_world:
 스폰으로 이동하기: /spawn, /tmvhs, /스폰, /넴주  
 개인 채팅 청소: /채팅청소  
 전체 채팅 청소: /전체채팅청소  
+잠수맵으로 이동하기: /잠수
 ## Permissions
 ```yaml
-utiltool.reload:
-  default: op
-utiltool.spawn:
-  default: true
-utiltool.setspawn:
-  default: op
-utiltool.mychatclear:
-  default: true
-utiltool.allchatclear:
-  default: op
-utiltool.broadcaster:
-  default: true
+permissions:
+  utiltool.reload:
+    default: op
+  utiltool.spawn:
+    default: true
+  utiltool.setspawn:
+    default: op
+  utiltool.mychatclear:
+    default: true
+  utiltool.allchatclear:
+    default: op
+  utiltool.broadcaster:
+    default: true
+  utiltool.whisper:
+    default: true
+  utiltool.movetoafk:
+    default: true
 ```
