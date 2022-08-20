@@ -161,7 +161,11 @@ public final class UtilTool extends JavaPlugin implements Listener {
             }
         }
         if (cmd.getName().equalsIgnoreCase("잠수") && player.hasPermission("utiltool.movetoafk")) {
-            player.performCommand(moveToAfkCommand);
+            if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+                player.performCommand(PlaceholderAPI.setPlaceholders(player, moveToAfkCommand));
+            } else {
+                player.performCommand(moveToAfkCommand);
+            }
         }
         return false;
     }
