@@ -105,7 +105,10 @@ move_to_afk_command: ""
 ```
 사용 예시:
 ```yaml
-move_to_afk_command: "/mv tp %player_name% AfkWorld"
+move_to_afk_command: "/tp 0 0 0"
+```
+```yaml
+move_to_afk_command: "/mv tp %player_name% AFK"
 ```
 
 
