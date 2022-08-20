@@ -1,5 +1,7 @@
 package net.teamuni.playerjoinandleave;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -41,6 +43,8 @@ public final class UtilTool extends JavaPlugin implements Listener {
     String moveToAfkCommand = "";
     List<String> commandsList;
 
+    private final File ignoreFile = new File(getDataFolder(), "/ignoreFile.yml");
+
 
     @Override
     public void onEnable() {
@@ -68,6 +72,7 @@ public final class UtilTool extends JavaPlugin implements Listener {
         if (cmd.getName().equalsIgnoreCase("utiltool")) {
             if (args[0].equalsIgnoreCase("reload") && player.hasPermission("utiltool.reload")) {
                 reloadConfig();
+                makeIgnoreFile(ignoreFile);
                 saveConfig();
                 getConfigMessages();
                 CommandsManager.reload();
@@ -260,6 +265,15 @@ public final class UtilTool extends JavaPlugin implements Listener {
                 String clickPlayerName = (event.getRightClicked()).getName();
                 String replacedShiftRightClick = (shiftRightClickCommand.replace("%player%", clickPlayerName));
                 p.performCommand(replacedShiftRightClick);
+            }
+        }
+    }
+    public void makeIgnoreFile(File ignoreFile){
+        if (!ignoreFile.exists() || !ignoreFile.isFile()) {
+            try {
+                ignoreFile.createNewFile();
+            } catch (IOException event){
+                event.printStackTrace();
             }
         }
     }
