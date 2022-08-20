@@ -20,6 +20,8 @@ commands:
   whisper:
     permission: utiltool.whisper
     aliases: [귓, 귓속말, rnlt, rnltthrakf, r, m, msg, w]
+  잠수:
+    permission: utiltool.movetoafk
 permissions:
   utiltool.reload:
     default: op
@@ -34,4 +36,6 @@ permissions:
   utiltool.broadcaster:
     default: true
   utiltool.whisper:
+    default: true
+  utiltool.movetoafk:
     default: true
