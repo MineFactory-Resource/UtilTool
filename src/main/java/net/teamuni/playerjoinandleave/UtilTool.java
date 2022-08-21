@@ -160,13 +160,6 @@ public final class UtilTool extends JavaPlugin implements Listener {
                 getLogger().info("The message assigned to the Commands does not exist.");
             }
         }
-        if (cmd.getName().equalsIgnoreCase("잠수") && player.hasPermission("utiltool.movetoafk")) {
-            if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-                player.performCommand(PlaceholderAPI.setPlaceholders(player, moveToAfkCommand));
-            } else {
-                player.performCommand(moveToAfkCommand);
-            }
-        }
         return false;
     }
 

@@ -97,28 +97,13 @@ enable_world:
   - "world_nether"
 ```
 
-###잠수맵 이동
-/잠수 명령어 입력 시 config.yml의 move_to_afk_command에 할당된 명령어가 실행됩니다.  
-플레이어의 닉네임을 가져오시려면 PlaceholderAPI를 이용해 주세요.
-```yaml
-move_to_afk_command: ""
-```
-사용 예시:
-```yaml
-move_to_afk_command: "/tp 0 0 0"
-```
-```yaml
-move_to_afk_command: "/mv tp %player_name% AFK"
-```
-
 
 ## Commands
 플러그인 리로드 하기: /utiltool reload  
 스폰 지점 정하기: /setspawn  
 스폰으로 이동하기: /spawn, /tmvhs, /스폰, /넴주  
 개인 채팅 청소: /채팅청소  
-전체 채팅 청소: /전체채팅청소  
-잠수맵으로 이동하기: /잠수
+전체 채팅 청소: /전체채팅청소
 ## Permissions
 ```yaml
 permissions:
@@ -135,7 +120,5 @@ permissions:
   utiltool.broadcaster:
     default: true
   utiltool.whisper:
-    default: true
-  utiltool.movetoafk:
     default: true
 ```
