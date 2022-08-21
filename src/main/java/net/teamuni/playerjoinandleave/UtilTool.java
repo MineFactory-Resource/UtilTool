@@ -38,7 +38,6 @@ public final class UtilTool extends JavaPlugin implements Listener {
     String leaveMessage = "";
     String firstTimeJoinMessage = "";
     String shiftRightClickCommand = "";
-    String moveToAfkCommand = "";
     List<String> commandsList;
 
 
@@ -193,7 +192,6 @@ public final class UtilTool extends JavaPlugin implements Listener {
         leaveMessage = getConfig().getString("leave_message");
         firstTimeJoinMessage = getConfig().getString("first_time_join_message");
         shiftRightClickCommand = getConfig().getString("shift_right_click_command");
-        moveToAfkCommand = getConfig().getString("move_to_afk_command");
     }
 
     @EventHandler(priority = EventPriority.HIGH)
