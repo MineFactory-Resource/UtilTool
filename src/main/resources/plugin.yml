@@ -22,6 +22,10 @@ commands:
     aliases: [귓, 귓속말, rnlt, rnltthrakf, r, m, msg, w]
   잠수:
     permission: utiltool.movetoafk
+  귓속말차단:
+    permission: utiltool.whisperignore
+  귓속말차단해제:
+    permission: utiltool.whisperunignore
 permissions:
   utiltool.reload:
     default: op
@@ -38,4 +42,8 @@ permissions:
   utiltool.whisper:
     default: true
   utiltool.movetoafk:
+    default: true
+  utiltool.whisperignore:
+    default: true
+  utiltool.whisperunignore:
     default: true
