@@ -1,7 +1,5 @@
 package net.teamuni.playerjoinandleave;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -43,9 +41,6 @@ public final class UtilTool extends JavaPlugin implements Listener {
     String moveToAfkCommand = "";
     List<String> commandsList;
 
-    private final File ignoreFile = new File(getDataFolder(), "/ignoreFile.yml");
-
-
     @Override
     public void onEnable() {
         this.getServer().getPluginManager().registerEvents(this, this);
@@ -53,6 +48,7 @@ public final class UtilTool extends JavaPlugin implements Listener {
         getConfigMessages();
         CommandsManager.createCommandsYml();
         PlayerUuidManager.createCommandsYml();
+        IgnorePlayerManager.createCommandsYml();
         registerCommands();
         BroadCasterCooldown.setupCooldown();
         getCommand("utiltool").setTabCompleter(new CommandTabCompleter());
@@ -61,6 +57,7 @@ public final class UtilTool extends JavaPlugin implements Listener {
     @Override
     public void onDisable() {
         PlayerUuidManager.save();
+        IgnorePlayerManager.save();
     }
 
     @Override
@@ -72,13 +69,14 @@ public final class UtilTool extends JavaPlugin implements Listener {
         if (cmd.getName().equalsIgnoreCase("utiltool")) {
             if (args[0].equalsIgnoreCase("reload") && player.hasPermission("utiltool.reload")) {
                 reloadConfig();
-                makeIgnoreFile(ignoreFile);
                 saveConfig();
                 getConfigMessages();
                 CommandsManager.reload();
                 CommandsManager.save();
                 PlayerUuidManager.save();
                 PlayerUuidManager.reload();
+                IgnorePlayerManager.save();
+                IgnorePlayerManager.reload();
                 registerCommands();
                 player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "UtilTool has been reloaded!");
                 return false;
@@ -123,13 +121,58 @@ public final class UtilTool extends JavaPlugin implements Listener {
 
         if (Arrays.asList(whisper).contains(cmd.getName()) && player.hasPermission("utiltool.whisper")) {
             Player target = Bukkit.getPlayer(args[0]);
-            if (target != null) {
+            String targetIgnore = target.getName() + "." + player.getName();
+            if (args[0] != null) {
                 if (args.length > 1) {
-                    String targetMsg = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
-                    target.sendMessage("§e[ §6" + player.getName() + " §f→ §c나 §e]§f " + targetMsg);
-                    player.sendMessage("§e[ §c나" + " §f→ §6" + target.getName() + " §e]§f " + targetMsg);
+                    if (!IgnorePlayerManager.get().getStringList("Ignores").contains(targetIgnore)) {
+                        String targetMsg = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
+                        target.sendMessage("§e[ §6" + player.getName() + " §f→ §c나 §e]§f " + targetMsg);
+                        player.sendMessage("§e[ §c나" + " §f→ §6" + target.getName() + " §e]§f " + targetMsg);
+                    } else {
+                        player.sendMessage("§c[UtilTool] " + target.getName() + " 님이 귓속말을 차단했습니다!");
+                    }
                 } else {
                     player.sendMessage("§c[UtilTool] 상대방에게 보낼 귓속말이 없습니다!");
+                }
+            } else {
+                player.sendMessage("§c[UtilTool] 서버에 존재하지 않는 플레이어입니다!");
+            }
+        }
+        if (cmd.getName().equalsIgnoreCase("귓속말차단") && player.hasPermission("utiltool.whisperignore")) {
+            Player target = Bukkit.getPlayer(args[0]);
+            String Ignoreplayer = player.getName() + "." + target.getName();
+            if (args[0] != null) {
+                if (!player.getName().equals(target.getName())) {
+                    if (!IgnorePlayerManager.get().getStringList("Ignores").contains(Ignoreplayer)) {
+                        List<String> playerIgnoreList = IgnorePlayerManager.get().getStringList("Ignores");
+                        playerIgnoreList.add(Ignoreplayer);
+                        IgnorePlayerManager.get().set("Ignores", playerIgnoreList);
+                        player.sendMessage("§e[UtilTool] " + target.getName() + " 님을 차단했습니다!");
+                    } else {
+                        player.sendMessage("§c[UtilTool] 이미 차단한 플레이어 입니다!");
+                    }
+                } else {
+                    player.sendMessage("§c[UtilTool] 자기 자신을 차단할 수 없습니다!");
+                }
+            } else {
+                player.sendMessage("§c[UtilTool] 서버에 존재하지 않는 플레이어입니다!");
+            }
+        }
+        if (cmd.getName().equalsIgnoreCase("귓속말차단해제") && player.hasPermission("utiltool.whisperunignore")) {
+            Player target = Bukkit.getPlayer(args[0]);
+            String Ignoreplayer = player.getName() + "." + target.getName();
+            if (args[0] != null) {
+                if (!player.getName().equals(target.getName())) {
+                    if (IgnorePlayerManager.get().getStringList("Ignores").contains(Ignoreplayer)) {
+                        List<String> playerIgnoreList = IgnorePlayerManager.get().getStringList("Ignores");
+                        playerIgnoreList.remove(Ignoreplayer);
+                        IgnorePlayerManager.get().set("Ignores", playerIgnoreList);
+                        player.sendMessage("§e[UtilTool] " + target.getName() + " 님을 차단 한 것을 해제했습니다!");
+                    } else {
+                        player.sendMessage("§c[UtilTool] 차단 당하지 않은 플레이어 입니다!");
+                    }
+                } else {
+                    player.sendMessage("§c[UtilTool] 자기 자신을 차단 해제할 수 없습니다!");
                 }
             } else {
                 player.sendMessage("§c[UtilTool] 서버에 존재하지 않는 플레이어입니다!");
@@ -150,7 +193,6 @@ public final class UtilTool extends JavaPlugin implements Listener {
                 player.sendMessage("§a[UtilTool] §f확성기 재사용 까지 §a" + BroadCasterCooldown.getCooldown(player) + "§f초 남았습니다");
             }
         }
-
         if (commandsList != null && commandsList.contains(cmd.getName())) {
             for (String commandMessage : CommandsManager.get().getStringList("Commands." + cmd.getName())) {
                 if (commandMessage != null) {
@@ -265,15 +307,6 @@ public final class UtilTool extends JavaPlugin implements Listener {
                 String clickPlayerName = (event.getRightClicked()).getName();
                 String replacedShiftRightClick = (shiftRightClickCommand.replace("%player%", clickPlayerName));
                 p.performCommand(replacedShiftRightClick);
-            }
-        }
-    }
-    public void makeIgnoreFile(File ignoreFile){
-        if (!ignoreFile.exists() || !ignoreFile.isFile()) {
-            try {
-                ignoreFile.createNewFile();
-            } catch (IOException event){
-                event.printStackTrace();
             }
         }
     }
