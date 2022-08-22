@@ -14,7 +14,7 @@ public class PlayerUuidManager {
     private static FileConfiguration playersFile;
 
     public static void createCommandsYml() {
-        file = new File(Bukkit.getServer().getPluginManager().getPlugin("UtilTool").getDataFolder(), "players.yml");
+        file = new File(main.getDataFolder(), "players.yml");
 
         if (!file.exists()) {
             main.saveResource("players.yml", false);

@@ -13,7 +13,7 @@ public class IgnorePlayerManager {
     private static FileConfiguration ignoreplayersFile;
 
     public static void createCommandsYml() {
-        file = new File(Bukkit.getServer().getPluginManager().getPlugin("UtilTool").getDataFolder(), "ignoreplayer.yml");
+        file = new File(main.getDataFolder(), "ignoreplayer.yml");
 
         if (!file.exists()) {
             main.saveResource("ignoreplayer.yml", false);

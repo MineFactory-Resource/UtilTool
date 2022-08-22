@@ -14,7 +14,7 @@ public class CommandsManager {
     private static FileConfiguration commandsFile;
 
     public static void createCommandsYml() {
-        file = new File(Bukkit.getServer().getPluginManager().getPlugin("UtilTool").getDataFolder(), "commands.yml");
+        file = new File(main.getDataFolder(), "commands.yml");
 
         if (!file.exists()) {
             main.saveResource("commands.yml", false);
