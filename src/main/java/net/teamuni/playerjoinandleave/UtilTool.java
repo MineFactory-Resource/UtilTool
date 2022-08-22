@@ -57,6 +57,7 @@ public final class UtilTool extends JavaPlugin implements Listener {
         registerCommands();
         BroadCasterCooldown.setupCooldown();
         getCommand("utiltool").setTabCompleter(new CommandTabCompleter());
+        getSpawnInfo();
     }
 
     @Override
@@ -80,6 +81,7 @@ public final class UtilTool extends JavaPlugin implements Listener {
                 PlayerUuidManager.save();
                 PlayerUuidManager.reload();
                 registerCommands();
+                getSpawnInfo();
                 player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "UtilTool has been reloaded!");
             }
             return false;
@@ -92,6 +94,7 @@ public final class UtilTool extends JavaPlugin implements Listener {
             getConfig().set("spawnpoint.yaw", player.getLocation().getYaw());
             getConfig().set("spawnpoint.pitch", player.getLocation().getPitch());
             saveConfig();
+            getSpawnInfo();
             player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "Respawn point has been set!");
             return false;
         }
@@ -196,6 +199,14 @@ public final class UtilTool extends JavaPlugin implements Listener {
             leaveMessage = getConfig().getString("leave_message");
             firstTimeJoinMessage = getConfig().getString("first_time_join_message");
             shiftRightClickCommand = getConfig().getString("shift_right_click_command");
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            getLogger().info("config.yml에서 정보를 불러오는데 문제가 발생하였습니다.");
+        }
+    }
+
+    public void getSpawnInfo() {
+        try {
             world = Bukkit.getServer().getWorld(Objects.requireNonNull(getConfig().getString("spawnpoint.world")));
             x = getConfig().getDouble("spawnpoint.x");
             y = getConfig().getDouble("spawnpoint.y");
@@ -204,7 +215,7 @@ public final class UtilTool extends JavaPlugin implements Listener {
             pitch = (float) getConfig().getDouble("spawnpoint.pitch");
         } catch (NullPointerException | IllegalArgumentException e) {
             e.printStackTrace();
-            getLogger().info("config.yml에서 정보를 불러오는데 문제가 발생하였습니다.");
+            getLogger().info("스폰 정보를 불러오는데 문제가 발생하였습니다.");
         }
     }
 
