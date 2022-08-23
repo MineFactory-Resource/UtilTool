@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.data.type.Switch;
 import org.bukkit.command.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -120,62 +121,70 @@ public final class UtilTool extends JavaPlugin implements Listener {
         }
 
         if (Arrays.asList(whisper).contains(cmd.getName()) && player.hasPermission("utiltool.whisper")) {
-            Player target = Bukkit.getPlayer(args[0]);
-            String targetIgnore = target.getName() + "." + player.getName();
             if (args[0] != null) {
+                if (args[0].equals("차단") && player.hasPermission("utiltool.whisperignore")) {
+                    if (args[1].equals("해제") && player.hasPermission("utiltool.whisperunignore")){
+                        if (args[2] != null) {
+                            if (!player.getName().equals(args[2])) {
+                                String targetIgnore = args[2] + "." + player.getName();
+                                if (IgnorePlayerManager.get().getStringList("Ignores").contains(targetIgnore)) {
+                                    List<String> playerIgnoreList = IgnorePlayerManager.get().getStringList("Ignores");
+                                    playerIgnoreList.remove(targetIgnore);
+                                    IgnorePlayerManager.get().set("Ignores", playerIgnoreList);
+                                    player.sendMessage("§e[알림] §a" + args[2] + " §f님을 차단한 것을 해제했습니다!");
+                                } else {
+                                    player.sendMessage("§e[알림] §f차단 당하지 않은 플레이어입니다!");
+                                }
+                            } else {
+                                player.sendMessage("§e[알림] §f자기 자신을 차단 해제할 수 없습니다!");
+                            }
+                        } else {
+                            player.sendMessage("§e[알림] §f서버에 존재하지 않는 플레이어입니다!");
+                        }
+                    } else {
+                        if (args[1] != null){
+                            String ignorePlayer = player.getName() + "." + args[1];
+                            if (!player.getName().equals(args[1])) {
+                                if (!IgnorePlayerManager.get().getStringList("Ignores").contains(ignorePlayer)) {
+                                    List<String> playerIgnoreList = IgnorePlayerManager.get().getStringList("Ignores");
+                                    playerIgnoreList.add(ignorePlayer);
+                                    IgnorePlayerManager.get().set("Ignores", playerIgnoreList);
+                                    player.sendMessage("§e[알림] §a" + args[1] + " §f님을 차단했습니다!");
+                                } else {
+                                    player.sendMessage("§e[알림] §f이미 차단한 플레이어입니다!");
+                                }
+                            } else {
+                                player.sendMessage("§e[알림] §f자기 자신을 차단할 수 없습니다!");
+                            }
+                        } else {
+                            player.sendMessage("§e[알림] §f서버에 존재하지 않는 플레이어입니다!");
+                        }
+                    }
+                }
                 if (args.length > 1) {
-                    if (!IgnorePlayerManager.get().getStringList("Ignores").contains(targetIgnore)) {
-                        String targetMsg = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
-                        target.sendMessage("§e[ §6" + player.getName() + " §f→ §c나 §e]§f " + targetMsg);
-                        player.sendMessage("§e[ §c나" + " §f→ §6" + target.getName() + " §e]§f " + targetMsg);
-                    } else {
-                        player.sendMessage("§c[UtilTool] " + target.getName() + " 님이 귓속말을 차단했습니다!");
+                    Player target = Bukkit.getPlayer(args[0]);
+                    if (target != null) {
+                        if (!IgnorePlayerManager.get().getStringList("Ignores").contains(args[0] + "." + player.getName())) {
+                            String targetMsg = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
+                            if (args[1] != null) {
+                                target.sendMessage("§e[ §6" + player.getName() + " §f→ §c나 §e]§f " + targetMsg);
+                                player.sendMessage("§e[ §c나" + " §f→ §6" + target.getName() + " §e]§f " + targetMsg);
+                            } else {
+                                player.sendMessage("§e[알림] §f상대에게 보낼 귓속말이 없습니다!");
+                            }
+                        } else {
+                            player.sendMessage("§e[알림] §a" + args[0] + " §f님이 귓속말을 차단했습니다!");
+                        }
+                    } else{
+                        player.sendMessage("§e[알림] §f서버에 존재하지 않는 플레이어입니다!");
                     }
                 } else {
-                    player.sendMessage("§c[UtilTool] 상대방에게 보낼 귓속말이 없습니다!");
+                    player.sendMessage("§e[알림] §f상대방에게 보낼 귓속말이 없습니다!");
                 }
             } else {
-                player.sendMessage("§c[UtilTool] 서버에 존재하지 않는 플레이어입니다!");
-            }
-        }
-        if (cmd.getName().equalsIgnoreCase("귓속말차단") && player.hasPermission("utiltool.whisperignore")) {
-            Player target = Bukkit.getPlayer(args[0]);
-            String Ignoreplayer = player.getName() + "." + target.getName();
-            if (args[0] != null) {
-                if (!player.getName().equals(target.getName())) {
-                    if (!IgnorePlayerManager.get().getStringList("Ignores").contains(Ignoreplayer)) {
-                        List<String> playerIgnoreList = IgnorePlayerManager.get().getStringList("Ignores");
-                        playerIgnoreList.add(Ignoreplayer);
-                        IgnorePlayerManager.get().set("Ignores", playerIgnoreList);
-                        player.sendMessage("§e[UtilTool] " + target.getName() + " 님을 차단했습니다!");
-                    } else {
-                        player.sendMessage("§c[UtilTool] 이미 차단한 플레이어 입니다!");
-                    }
-                } else {
-                    player.sendMessage("§c[UtilTool] 자기 자신을 차단할 수 없습니다!");
-                }
-            } else {
-                player.sendMessage("§c[UtilTool] 서버에 존재하지 않는 플레이어입니다!");
-            }
-        }
-        if (cmd.getName().equalsIgnoreCase("귓속말차단해제") && player.hasPermission("utiltool.whisperunignore")) {
-            Player target = Bukkit.getPlayer(args[0]);
-            String Ignoreplayer = player.getName() + "." + target.getName();
-            if (args[0] != null) {
-                if (!player.getName().equals(target.getName())) {
-                    if (IgnorePlayerManager.get().getStringList("Ignores").contains(Ignoreplayer)) {
-                        List<String> playerIgnoreList = IgnorePlayerManager.get().getStringList("Ignores");
-                        playerIgnoreList.remove(Ignoreplayer);
-                        IgnorePlayerManager.get().set("Ignores", playerIgnoreList);
-                        player.sendMessage("§e[UtilTool] " + target.getName() + " 님을 차단 한 것을 해제했습니다!");
-                    } else {
-                        player.sendMessage("§c[UtilTool] 차단 당하지 않은 플레이어 입니다!");
-                    }
-                } else {
-                    player.sendMessage("§c[UtilTool] 자기 자신을 차단 해제할 수 없습니다!");
-                }
-            } else {
-                player.sendMessage("§c[UtilTool] 서버에 존재하지 않는 플레이어입니다!");
+                player.sendMessage("§6/귓속말 [상대] [할말] - 상대에게 귓속말을 전달합니다.");
+                player.sendMessage("§6/귓속말 차단 [상대] - 상대의 귓속말을 차단합니다.");
+                player.sendMessage("§6/귓속말 차단해제 [상대] - 상대를 차단한 것을 해제합니다.");
             }
         }
         if (cmd.getName().equalsIgnoreCase("확성기") && player.hasPermission("utiltool.broadcaster")) {
@@ -190,7 +199,7 @@ public final class UtilTool extends JavaPlugin implements Listener {
                     player.sendMessage("§c[UtilTool] 사용법: /확성기 <메세지>");
                 }
             } else {
-                player.sendMessage("§a[UtilTool] §f확성기 재사용 까지 §a" + BroadCasterCooldown.getCooldown(player) + "§f초 남았습니다");
+                player.sendMessage("§a[UtilTool] §f확성기 재사용까지 §a" + BroadCasterCooldown.getCooldown(player) + "§f초 남았습니다");
             }
         }
         if (commandsList != null && commandsList.contains(cmd.getName())) {
