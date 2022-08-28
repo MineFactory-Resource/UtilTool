@@ -38,8 +38,13 @@ public final class UtilTool extends JavaPlugin implements Listener {
     String leaveMessage = "";
     String firstTimeJoinMessage = "";
     String shiftRightClickCommand = "";
-    String moveToAfkCommand = "";
     List<String> commandsList;
+    World world;
+    double x;
+    double y;
+    double z;
+    float yaw;
+    float pitch;
 
     @Override
     public void onEnable() {
@@ -52,6 +57,7 @@ public final class UtilTool extends JavaPlugin implements Listener {
         registerCommands();
         BroadCasterCooldown.setupCooldown();
         getCommand("utiltool").setTabCompleter(new CommandTabCompleter());
+        getSpawnInfo();
     }
 
     @Override
@@ -66,8 +72,8 @@ public final class UtilTool extends JavaPlugin implements Listener {
         String[] spawn = {"spawn", "tmvhs", "스폰", "넴주"};
         String[] whisper = {"귓", "귓속말", "rnlt", "rnltthrakf", "r", "w", "m", "msg", "whisper"};
 
-        if (cmd.getName().equalsIgnoreCase("utiltool")) {
-            if (args[0].equalsIgnoreCase("reload") && player.hasPermission("utiltool.reload")) {
+        if (cmd.getName().equalsIgnoreCase("utiltool") && player.hasPermission("utiltool.reload")) {
+            if (args[0].equalsIgnoreCase("reload")) {
                 reloadConfig();
                 saveConfig();
                 getConfigMessages();
@@ -78,9 +84,10 @@ public final class UtilTool extends JavaPlugin implements Listener {
                 IgnorePlayerManager.save();
                 IgnorePlayerManager.reload();
                 registerCommands();
+                getSpawnInfo();
                 player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "UtilTool has been reloaded!");
-                return false;
             }
+            return false;
         }
         if (cmd.getName().equalsIgnoreCase("setspawn") && player.hasPermission("utiltool.setspawn")) {
             getConfig().set("spawnpoint.world", Objects.requireNonNull(player.getLocation().getWorld()).getName());
@@ -90,16 +97,11 @@ public final class UtilTool extends JavaPlugin implements Listener {
             getConfig().set("spawnpoint.yaw", player.getLocation().getYaw());
             getConfig().set("spawnpoint.pitch", player.getLocation().getPitch());
             saveConfig();
+            getSpawnInfo();
             player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "Respawn point has been set!");
             return false;
         }
         if (Arrays.asList(spawn).contains(cmd.getName()) && player.hasPermission("utiltool.spawn")) {
-            World world = Bukkit.getServer().getWorld(Objects.requireNonNull(getConfig().getString("spawnpoint.world")));
-            double x = getConfig().getDouble("spawnpoint.x");
-            double y = getConfig().getDouble("spawnpoint.y");
-            double z = getConfig().getDouble("spawnpoint.z");
-            float yaw = (float) getConfig().getDouble("spawnpoint.yaw");
-            float pitch = (float) getConfig().getDouble("spawnpoint.pitch");
             player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "이동 중...");
             player.teleport(new Location(world, x, y, z, yaw, pitch));
             return false;
@@ -172,6 +174,7 @@ public final class UtilTool extends JavaPlugin implements Listener {
                 player.sendMessage("§6/차단 [상대] - 상대의 귓속말을 차단합니다.");
                 player.sendMessage("§6/차단해제 [상대] - 상대를 차단한 것을 해제합니다.");
             }
+            return false;
         }
         if (cmd.getName().equalsIgnoreCase("확성기") && player.hasPermission("utiltool.broadcaster")) {
             String lore = String.join(" ", Arrays.copyOfRange(args, 0, args.length));
@@ -187,6 +190,7 @@ public final class UtilTool extends JavaPlugin implements Listener {
             } else {
                 player.sendMessage("§a[UtilTool] §f확성기 재사용까지 §a" + BroadCasterCooldown.getCooldown(player) + "§f초 남았습니다");
             }
+            return false;
         }
         if (commandsList != null && commandsList.contains(cmd.getName())) {
             for (String commandMessage : CommandsManager.get().getStringList("Commands." + cmd.getName())) {
@@ -201,13 +205,7 @@ public final class UtilTool extends JavaPlugin implements Listener {
             if (CommandsManager.get().getStringList("Commands." + cmd.getName()).isEmpty()) {
                 getLogger().info("The message assigned to the Commands does not exist.");
             }
-        }
-        if (cmd.getName().equalsIgnoreCase("잠수") && player.hasPermission("utiltool.movetoafk")) {
-            if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-                player.performCommand(PlaceholderAPI.setPlaceholders(player, moveToAfkCommand));
-            } else {
-                player.performCommand(moveToAfkCommand);
-            }
+            return false;
         }
         return false;
     }
@@ -232,17 +230,35 @@ public final class UtilTool extends JavaPlugin implements Listener {
                 }
             }
         } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException |
-                 NoSuchMethodException | InstantiationException | InvocationTargetException e) {
+                NoSuchMethodException | InstantiationException | InvocationTargetException e) {
             e.printStackTrace();
         }
     }
 
     public void getConfigMessages() {
-        joinMessage = getConfig().getString("join_message");
-        leaveMessage = getConfig().getString("leave_message");
-        firstTimeJoinMessage = getConfig().getString("first_time_join_message");
-        shiftRightClickCommand = getConfig().getString("shift_right_click_command");
-        moveToAfkCommand = getConfig().getString("move_to_afk_command");
+        try {
+            joinMessage = getConfig().getString("join_message");
+            leaveMessage = getConfig().getString("leave_message");
+            firstTimeJoinMessage = getConfig().getString("first_time_join_message");
+            shiftRightClickCommand = getConfig().getString("shift_right_click_command");
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            getLogger().info("config.yml에서 정보를 불러오는데 문제가 발생하였습니다.");
+        }
+    }
+
+    public void getSpawnInfo() {
+        try {
+            world = Bukkit.getServer().getWorld(Objects.requireNonNull(getConfig().getString("spawnpoint.world")));
+            x = getConfig().getDouble("spawnpoint.x");
+            y = getConfig().getDouble("spawnpoint.y");
+            z = getConfig().getDouble("spawnpoint.z");
+            yaw = (float) getConfig().getDouble("spawnpoint.yaw");
+            pitch = (float) getConfig().getDouble("spawnpoint.pitch");
+        } catch (NullPointerException | IllegalArgumentException e) {
+            e.printStackTrace();
+            getLogger().info("스폰 정보를 불러오는데 문제가 발생하였습니다.");
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGH)
