@@ -3,6 +3,7 @@ package net.teamuni.playerjoinandleave;
 import java.util.List;
 
 import me.clip.placeholderapi.PlaceholderAPI;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -180,9 +181,9 @@ public final class UtilTool extends JavaPlugin implements Listener {
             String lore = String.join(" ", Arrays.copyOfRange(args, 0, args.length));
             if (BroadCasterCooldown.checkCooldown(player)) {
                 if (args.length > 0) {
-                    Bukkit.broadcastMessage("");
-                    Bukkit.broadcastMessage("§6[§f " + player.getName() + " §6] §b" + lore);
-                    Bukkit.broadcastMessage("");
+                    Bukkit.broadcast(Component.text(""));
+                    Bukkit.broadcast(Component.text("§6[§f " + player.getName() + " §6] §b" + lore));
+                    Bukkit.broadcast(Component.text(""));
                     BroadCasterCooldown.setCooldown(player, 300);
                 } else {
                     player.sendMessage("§c[UtilTool] 사용법: /확성기 <메세지>");
@@ -266,15 +267,15 @@ public final class UtilTool extends JavaPlugin implements Listener {
         Player player = event.getPlayer();
         if (PlayerUuidManager.get().getStringList("UUIDs").contains(player.getUniqueId().toString())) {
             if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-                event.setJoinMessage(ChatColor.translateAlternateColorCodes('&', PlaceholderAPI.setPlaceholders(player, joinMessage)));
+                event.joinMessage(Component.text(ChatColor.translateAlternateColorCodes('&', PlaceholderAPI.setPlaceholders(player, joinMessage))));
             } else {
-                event.setJoinMessage(ChatColor.translateAlternateColorCodes('&', joinMessage));
+                event.joinMessage(Component.text(ChatColor.translateAlternateColorCodes('&', joinMessage)));
             }
         } else {
             if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-                event.setJoinMessage(ChatColor.translateAlternateColorCodes('&', PlaceholderAPI.setPlaceholders(player, firstTimeJoinMessage)));
+                event.joinMessage(Component.text(ChatColor.translateAlternateColorCodes('&', PlaceholderAPI.setPlaceholders(player, firstTimeJoinMessage))));
             } else {
-                event.setJoinMessage(ChatColor.translateAlternateColorCodes('&', firstTimeJoinMessage));
+                event.joinMessage(Component.text(ChatColor.translateAlternateColorCodes('&', firstTimeJoinMessage)));
             }
             List<String> playerUuidList = PlayerUuidManager.get().getStringList("UUIDs");
             playerUuidList.add(player.getUniqueId().toString());
@@ -286,9 +287,9 @@ public final class UtilTool extends JavaPlugin implements Listener {
     public void onLeave(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-            event.setQuitMessage(ChatColor.translateAlternateColorCodes('&', PlaceholderAPI.setPlaceholders(player, leaveMessage)));
+            event.quitMessage(Component.text(ChatColor.translateAlternateColorCodes('&', PlaceholderAPI.setPlaceholders(player, leaveMessage))));
         } else {
-            event.setQuitMessage(ChatColor.translateAlternateColorCodes('&', leaveMessage));
+            event.quitMessage(Component.text(ChatColor.translateAlternateColorCodes('&', leaveMessage)));
         }
     }
 
