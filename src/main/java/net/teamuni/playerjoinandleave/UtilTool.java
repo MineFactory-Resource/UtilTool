@@ -54,6 +54,7 @@ public final class UtilTool extends JavaPlugin implements Listener {
         registerCommands();
         BroadCasterCooldown.setupCooldown();
         getCommand("utiltool").setTabCompleter(new CommandTabCompleter());
+        getCommand("gm").setTabCompleter(new CommandTabCompleter());
         getSpawnInfo();
     }
 
