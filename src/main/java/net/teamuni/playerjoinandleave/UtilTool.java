@@ -167,17 +167,17 @@ public final class UtilTool extends JavaPlugin implements Listener {
                         player.sendMessage("§e[알림] §f현재 게임모드가 관전자 모드로 변경되었습니다.");
                         break;
                     default:
-                        player.sendMessage("§6/gm 0 [대상] - 게임모드를 서바이벌 모드로 변경합니다.");
-                        player.sendMessage("§6/gm 1 [대상] - 게임모드를 크리에이티브 모드로 변경합니다.");
-                        player.sendMessage("§6/gm 2 [대상] - 게임모드를 모험 모드로 변경합니다.");
-                        player.sendMessage("§6/gm 3 [대상] - 게임모드를 관전자 모드로 변경합니다.");
+                        player.sendMessage("§6/gm 0 - 게임모드를 서바이벌 모드로 변경합니다.");
+                        player.sendMessage("§6/gm 1 - 게임모드를 크리에이티브 모드로 변경합니다.");
+                        player.sendMessage("§6/gm 2 - 게임모드를 모험 모드로 변경합니다.");
+                        player.sendMessage("§6/gm 3 - 게임모드를 관전자 모드로 변경합니다.");
                         break;
                 }
             } else {
-                player.sendMessage("§6/gm 0 [대상] - 게임모드를 서바이벌 모드로 변경합니다.");
-                player.sendMessage("§6/gm 1 [대상] - 게임모드를 크리에이티브 모드로 변경합니다.");
-                player.sendMessage("§6/gm 2 [대상] - 게임모드를 모험 모드로 변경합니다.");
-                player.sendMessage("§6/gm 3 [대상] - 게임모드를 관전자 모드로 변경합니다.");
+                player.sendMessage("§6/gm 0 - 게임모드를 서바이벌 모드로 변경합니다.");
+                player.sendMessage("§6/gm 1 - 게임모드를 크리에이티브 모드로 변경합니다.");
+                player.sendMessage("§6/gm 2 - 게임모드를 모험 모드로 변경합니다.");
+                player.sendMessage("§6/gm 3 - 게임모드를 관전자 모드로 변경합니다.");
             }
         }
 
