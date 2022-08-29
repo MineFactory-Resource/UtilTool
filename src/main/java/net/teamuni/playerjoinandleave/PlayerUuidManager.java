@@ -13,7 +13,7 @@ public class PlayerUuidManager {
     private static File file;
     private static FileConfiguration playersFile;
 
-    public static void createCommandsYml() {
+    public static void createPlayersYml() {
         file = new File(main.getDataFolder(), "players.yml");
 
         if (!file.exists()) {

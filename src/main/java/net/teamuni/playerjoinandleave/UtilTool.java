@@ -52,8 +52,8 @@ public final class UtilTool extends JavaPlugin implements Listener {
         this.saveDefaultConfig();
         getConfigMessages();
         CommandsManager.createCommandsYml();
-        PlayerUuidManager.createCommandsYml();
-        IgnorePlayerManager.createCommandsYml();
+        PlayerUuidManager.createPlayersYml();
+        IgnorePlayerManager.createIgnorePlayerYml();
         registerCommands();
         BroadCasterCooldown.setupCooldown();
         getCommand("utiltool").setTabCompleter(new CommandTabCompleter());
