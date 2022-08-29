@@ -79,11 +79,11 @@ public final class UtilTool extends JavaPlugin implements Listener {
                 saveConfig();
                 getConfigMessages();
                 CommandsManager.reload();
-                CommandsManager.save();
                 PlayerUuidManager.save();
                 PlayerUuidManager.reload();
                 IgnorePlayerManager.save();
                 IgnorePlayerManager.reload();
+                MessagesManager.reload();
                 registerCommands();
                 getSpawnInfo();
                 player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "UtilTool has been reloaded!");
