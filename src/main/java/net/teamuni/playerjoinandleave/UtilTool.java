@@ -238,9 +238,9 @@ public final class UtilTool extends JavaPlugin implements Listener {
 
     public void getConfigMessages() {
         try {
-            joinMessage = getConfig().getString("join_message");
-            leaveMessage = getConfig().getString("leave_message");
-            firstTimeJoinMessage = getConfig().getString("first_time_join_message");
+            joinMessage = MessagesManager.get().getString("join_message");
+            leaveMessage = MessagesManager.get().getString("leave_message");
+            firstTimeJoinMessage = MessagesManager.get().getString("first_time_join_message");
             shiftRightClickCommand = getConfig().getString("shift_right_click_command");
         } catch (NullPointerException e) {
             e.printStackTrace();
