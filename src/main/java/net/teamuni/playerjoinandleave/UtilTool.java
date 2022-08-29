@@ -38,6 +38,7 @@ public final class UtilTool extends JavaPlugin implements Listener {
     String leaveMessage = "";
     String firstTimeJoinMessage = "";
     String shiftRightClickCommand = "";
+    String teleportMessage = "";
     List<String> commandsList;
     World world;
     double x;
@@ -103,7 +104,7 @@ public final class UtilTool extends JavaPlugin implements Listener {
             return false;
         }
         if (Arrays.asList(spawn).contains(cmd.getName()) && player.hasPermission("utiltool.spawn")) {
-            player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "이동 중...");
+            player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + teleportMessage);
             player.teleport(new Location(world, x, y, z, yaw, pitch));
             return false;
         }
@@ -241,6 +242,7 @@ public final class UtilTool extends JavaPlugin implements Listener {
             joinMessage = MessagesManager.get().getString("join_message");
             leaveMessage = MessagesManager.get().getString("leave_message");
             firstTimeJoinMessage = MessagesManager.get().getString("first_time_join_message");
+            teleportMessage = MessagesManager.get().getString("teleport_message");
             shiftRightClickCommand = getConfig().getString("shift_right_click_command");
         } catch (NullPointerException e) {
             e.printStackTrace();
