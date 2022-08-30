@@ -71,21 +71,26 @@ public final class UtilTool extends JavaPlugin implements Listener {
         String[] whisper = {"귓", "귓속말", "rnlt", "rnltthrakf", "r", "w", "m", "msg", "whisper"};
 
         if (cmd.getName().equalsIgnoreCase("utiltool") && player.hasPermission("utiltool.reload")) {
-            if (args[0].equalsIgnoreCase("reload")) {
-                reloadConfig();
-                saveConfig();
-                getConfigMessages();
-                CommandsManager.reload();
-                CommandsManager.save();
-                PlayerUuidManager.save();
-                PlayerUuidManager.reload();
-                IgnorePlayerManager.save();
-                IgnorePlayerManager.reload();
-                registerCommands();
-                getSpawnInfo();
-                player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "UtilTool has been reloaded!");
+            if (args.length > 0) {
+                if (args[0].equalsIgnoreCase("reload")) {
+                    reloadConfig();
+                    saveConfig();
+                    getConfigMessages();
+                    CommandsManager.reload();
+                    CommandsManager.save();
+                    PlayerUuidManager.save();
+                    PlayerUuidManager.reload();
+                    IgnorePlayerManager.save();
+                    IgnorePlayerManager.reload();
+                    registerCommands();
+                    getSpawnInfo();
+                    player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "UtilTool has been reloaded!");
+                    return false;
+                }
+            } else {
+                player.sendMessage("§e[알림] §f올바르지 않은 명령어입니다.");
+                return false;
             }
-            return false;
         }
         if (cmd.getName().equalsIgnoreCase("setspawn") && player.hasPermission("utiltool.setspawn")) {
             getConfig().set("spawnpoint.world", Objects.requireNonNull(player.getLocation().getWorld()).getName());
@@ -183,17 +188,21 @@ public final class UtilTool extends JavaPlugin implements Listener {
         }
 
         if (Arrays.asList(whisper).contains(cmd.getName()) && player.hasPermission("utiltool.whisper")) {
-            Player target = Bukkit.getPlayer(args[0]);
-            if (!IgnorePlayerManager.get().getStringList("Ignores").contains(args[0] + "." + player.getName())) {
-                String targetMsg = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
-                if (target != null) {
-                    target.sendMessage("§e[ §6" + player.getName() + " §f→ §c나 §e]§f " + targetMsg);
-                    player.sendMessage("§e[ §c나" + " §f→ §6" + args[0] + " §e]§f " + targetMsg);
+            if (args.length > 0) {
+                Player target = Bukkit.getPlayer(args[0]);
+                if (!IgnorePlayerManager.get().getStringList("Ignores").contains(args[0] + "." + player.getName())) {
+                    String targetMsg = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
+                    if (target != null) {
+                        target.sendMessage("§e[ §6" + player.getName() + " §f→ §c나 §e]§f " + targetMsg);
+                        player.sendMessage("§e[ §c나" + " §f→ §6" + args[0] + " §e]§f " + targetMsg);
+                    } else {
+                        player.sendMessage("§e[알림] §f서버에 존재하지 않는 플레이어입니다!");
+                    }
                 } else {
-                    player.sendMessage("§e[알림] §f서버에 존재하지 않는 플레이어입니다!");
+                    player.sendMessage("§e[알림] §a" + args[0] + " §f님이 귓속말을 차단했습니다!");
                 }
             } else {
-                player.sendMessage("§e[알림] §a" + args[0] + " §f님이 귓속말을 차단했습니다!");
+                player.sendMessage("§6/whisper [상대방] [할말] - [할말]을 [상대방] 에게 전달합니다.");
             }
         }
         if (cmd.getName().equalsIgnoreCase("차단") && player.hasPermission("utiltool.whisper")) {
@@ -246,10 +255,10 @@ public final class UtilTool extends JavaPlugin implements Listener {
                     Bukkit.broadcastMessage("");
                     BroadCasterCooldown.setCooldown(player, 300);
                 } else {
-                    player.sendMessage("§c[UtilTool] 사용법: /확성기 <메세지>");
+                    player.sendMessage("§6/확성기 [메세지] - [메세지]를 전체채팅으로 전달합니다.");
                 }
             } else {
-                player.sendMessage("§a[UtilTool] §f확성기 재사용까지 §a" + BroadCasterCooldown.getCooldown(player) + "§f초 남았습니다");
+                player.sendMessage("§e[알림] §f확성기 재사용까지 §a" + BroadCasterCooldown.getCooldown(player) + "§f초 남았습니다");
             }
             return false;
         }
