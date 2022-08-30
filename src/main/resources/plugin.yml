@@ -17,13 +17,6 @@ commands:
     permission: utiltool.allchatclear
   확성기:
     permission: utiltool.broadcaster
-  whisper:
-    permission: utiltool.whisper
-    aliases: [귓, 귓속말, rnlt, rnltthrakf, r, m, msg, w]
-  차단:
-    permission: utiltool.whisper
-  차단해제:
-    permission: utiltool.whisper
   gm:
     permission: utiltool.gamemode
   gmc:
@@ -42,8 +35,6 @@ permissions:
   utiltool.allchatclear:
     default: op
   utiltool.broadcaster:
-    default: true
-  utiltool.whisper:
     default: true
   utiltool.gamemode:
     default: op
