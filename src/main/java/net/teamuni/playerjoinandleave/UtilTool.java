@@ -3,10 +3,7 @@ package net.teamuni.playerjoinandleave;
 import java.util.List;
 
 import me.clip.placeholderapi.PlaceholderAPI;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.command.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -39,6 +36,8 @@ public final class UtilTool extends JavaPlugin implements Listener {
     String firstTimeJoinMessage = "";
     String shiftRightClickCommand = "";
     String teleportMessage = "";
+    String title = "";
+    String subtitle = "";
     List<String> commandsList;
     World world;
     double x;
@@ -46,6 +45,9 @@ public final class UtilTool extends JavaPlugin implements Listener {
     double z;
     float yaw;
     float pitch;
+    int fadeIn;
+    int stay;
+    int fadeOut;
 
     @Override
     public void onEnable() {
@@ -59,6 +61,7 @@ public final class UtilTool extends JavaPlugin implements Listener {
         registerCommands();
         BroadCasterCooldown.setupCooldown();
         getCommand("utiltool").setTabCompleter(new CommandTabCompleter());
+        getCommand("gm").setTabCompleter(new CommandTabCompleter());
         getSpawnInfo();
     }
 
@@ -75,21 +78,25 @@ public final class UtilTool extends JavaPlugin implements Listener {
         String[] whisper = {"귓", "귓속말", "rnlt", "rnltthrakf", "r", "w", "m", "msg", "whisper"};
 
         if (cmd.getName().equalsIgnoreCase("utiltool") && player.hasPermission("utiltool.reload")) {
-            if (args[0].equalsIgnoreCase("reload")) {
-                reloadConfig();
-                saveConfig();
-                getConfigMessages();
-                CommandsManager.reload();
-                PlayerUuidManager.save();
-                PlayerUuidManager.reload();
-                IgnorePlayerManager.save();
-                IgnorePlayerManager.reload();
-                MessagesManager.reload();
-                registerCommands();
-                getSpawnInfo();
-                player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "UtilTool has been reloaded!");
+            if (args.length > 0) {
+                if (args[0].equalsIgnoreCase("reload")) {
+                    reloadConfig();
+                    saveConfig();
+                    getConfigMessages();
+                    CommandsManager.reload();
+                    PlayerUuidManager.save();
+                    PlayerUuidManager.reload();
+                    IgnorePlayerManager.save();
+                    IgnorePlayerManager.reload();
+                    MessagesManager.reload();
+                    registerCommands();
+                    getSpawnInfo();
+                    player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "UtilTool has been reloaded!");
+                  }
+              } else {
+                  player.sendMessage("§e[알림] §f올바르지 않은 명령어입니다.");
+                  return false;
             }
-            return false;
         }
         if (cmd.getName().equalsIgnoreCase("setspawn") && player.hasPermission("utiltool.setspawn")) {
             getConfig().set("spawnpoint.world", Objects.requireNonNull(player.getLocation().getWorld()).getName());
@@ -106,6 +113,7 @@ public final class UtilTool extends JavaPlugin implements Listener {
         if (Arrays.asList(spawn).contains(cmd.getName()) && player.hasPermission("utiltool.spawn")) {
             player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + teleportMessage);
             player.teleport(new Location(world, x, y, z, yaw, pitch));
+            player.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
             return false;
         }
         if (cmd.getName().equalsIgnoreCase("채팅청소") && player.hasPermission("utiltool.mychatclear")) {
@@ -122,19 +130,86 @@ public final class UtilTool extends JavaPlugin implements Listener {
             player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "All Chat has been cleaned!");
             return false;
         }
+        if (cmd.getName().equalsIgnoreCase("gmc") && player.hasPermission("utiltool.gamemode")) {
+            if (args.length > 0){
+                Player target = Bukkit.getPlayer(args[0]);
+                if (target != null){
+                    target.setGameMode(GameMode.CREATIVE);
+                    target.sendMessage("§e[알림] §f현재 게임모드가 크리에이티브 모드로 변경되었습니다.");
+                    player.sendMessage("§e[알림] §f현재" + args[0] + " 님의 게임모드가 크리에이티브 모드로 변경되었습니다.");
 
-        if (Arrays.asList(whisper).contains(cmd.getName()) && player.hasPermission("utiltool.whisper")) {
-            Player target = Bukkit.getPlayer(args[0]);
-            if (!IgnorePlayerManager.get().getStringList("Ignores").contains(args[0] + "." + player.getName())) {
-                String targetMsg = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
-                if (target != null) {
-                    target.sendMessage("§e[ §6" + player.getName() + " §f→ §c나 §e]§f " + targetMsg);
-                    player.sendMessage("§e[ §c나" + " §f→ §6" + args[0] + " §e]§f " + targetMsg);
-                } else {
-                    player.sendMessage("§e[알림] §f서버에 존재하지 않는 플레이어입니다!");
                 }
             } else {
-                player.sendMessage("§e[알림] §a" + args[0] + " §f님이 귓속말을 차단했습니다!");
+                player.setGameMode(GameMode.CREATIVE);
+                player.sendMessage("§e[알림] §f현재 게임모드가 크리에이티브 모드로 변경되었습니다.");
+                return false;
+            }
+        }
+        if (cmd.getName().equalsIgnoreCase("gms") && player.hasPermission("utiltool.gamemode")) {
+            if (args.length > 0){
+                Player target = Bukkit.getPlayer(args[0]);
+                if (target != null){
+                    target.setGameMode(GameMode.SURVIVAL);
+                    target.sendMessage("§e[알림] §f현재 게임모드가 크리에이티브 모드로 변경되었습니다.");
+                    player.sendMessage("§e[알림] §f현재" + args[0] + " 님의 게임모드가 크리에이티브 모드로 변경되었습니다.");
+
+                }
+            } else {
+                player.setGameMode(GameMode.SURVIVAL);
+                player.sendMessage("§e[알림] §f현재 게임모드가 크리에이티브 모드로 변경되었습니다.");
+                return false;
+            }
+        }
+        if (cmd.getName().equalsIgnoreCase("gm") && player.hasPermission("utiltool.gamemode")) {
+            if (args.length == 1) {
+                switch (args[0]) {
+                    case "0":
+                        player.setGameMode(GameMode.SURVIVAL);
+                        player.sendMessage("§e[알림] §f현재 게임모드가 서바이벌 모드로 변경되었습니다.");
+                        break;
+                    case "1":
+                        player.setGameMode(GameMode.CREATIVE);
+                        player.sendMessage("§e[알림] §f현재 게임모드가 크리에이티브 모드로 변경되었습니다.");
+                        break;
+                    case "2":
+                        player.setGameMode(GameMode.ADVENTURE);
+                        player.sendMessage("§e[알림] §f현재 게임모드가 모험 모드로 변경되었습니다.");
+                        break;
+                    case "3":
+                        player.setGameMode(GameMode.SPECTATOR);
+                        player.sendMessage("§e[알림] §f현재 게임모드가 관전자 모드로 변경되었습니다.");
+                        break;
+                    default:
+                        player.sendMessage("§6/gm 0 - 게임모드를 서바이벌 모드로 변경합니다.");
+                        player.sendMessage("§6/gm 1 - 게임모드를 크리에이티브 모드로 변경합니다.");
+                        player.sendMessage("§6/gm 2 - 게임모드를 모험 모드로 변경합니다.");
+                        player.sendMessage("§6/gm 3 - 게임모드를 관전자 모드로 변경합니다.");
+                        break;
+                }
+            } else {
+                player.sendMessage("§6/gm 0 - 게임모드를 서바이벌 모드로 변경합니다.");
+                player.sendMessage("§6/gm 1 - 게임모드를 크리에이티브 모드로 변경합니다.");
+                player.sendMessage("§6/gm 2 - 게임모드를 모험 모드로 변경합니다.");
+                player.sendMessage("§6/gm 3 - 게임모드를 관전자 모드로 변경합니다.");
+            }
+        }
+
+        if (Arrays.asList(whisper).contains(cmd.getName()) && player.hasPermission("utiltool.whisper")) {
+            if (args.length > 0) {
+                Player target = Bukkit.getPlayer(args[0]);
+                if (!IgnorePlayerManager.get().getStringList("Ignores").contains(args[0] + "." + player.getName())) {
+                    String targetMsg = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
+                    if (target != null) {
+                        target.sendMessage("§e[ §6" + player.getName() + " §f→ §c나 §e]§f " + targetMsg);
+                        player.sendMessage("§e[ §c나" + " §f→ §6" + args[0] + " §e]§f " + targetMsg);
+                    } else {
+                        player.sendMessage("§e[알림] §f서버에 존재하지 않는 플레이어입니다!");
+                    }
+                } else {
+                    player.sendMessage("§e[알림] §a" + args[0] + " §f님이 귓속말을 차단했습니다!");
+                }
+            } else {
+                player.sendMessage("§6/whisper [상대방] [할말] - [할말]을 [상대방] 에게 전달합니다.");
             }
         }
         if (cmd.getName().equalsIgnoreCase("차단") && player.hasPermission("utiltool.whisper")) {
@@ -187,10 +262,10 @@ public final class UtilTool extends JavaPlugin implements Listener {
                     Bukkit.broadcastMessage("");
                     BroadCasterCooldown.setCooldown(player, 300);
                 } else {
-                    player.sendMessage("§c[UtilTool] 사용법: /확성기 <메세지>");
+                    player.sendMessage("§6/확성기 [메세지] - [메세지]를 전체채팅으로 전달합니다.");
                 }
             } else {
-                player.sendMessage("§a[UtilTool] §f확성기 재사용까지 §a" + BroadCasterCooldown.getCooldown(player) + "§f초 남았습니다");
+                player.sendMessage("§e[알림] §f확성기 재사용까지 §a" + BroadCasterCooldown.getCooldown(player) + "§f초 남았습니다");
             }
             return false;
         }
@@ -238,12 +313,17 @@ public final class UtilTool extends JavaPlugin implements Listener {
     }
 
     public void getConfigMessages() {
+        fadeIn = getConfig().getInt("fadeIn");
+        stay = getConfig().getInt("stay");
+        fadeOut = getConfig().getInt("fadeOut");
         try {
             joinMessage = MessagesManager.get().getString("join_message");
             leaveMessage = MessagesManager.get().getString("leave_message");
             firstTimeJoinMessage = MessagesManager.get().getString("first_time_join_message");
             teleportMessage = MessagesManager.get().getString("teleport_message");
             shiftRightClickCommand = getConfig().getString("shift_right_click_command");
+            title = getConfig().getString("title");
+            subtitle = getConfig().getString("subtitle");
         } catch (NullPointerException e) {
             e.printStackTrace();
             getLogger().info("config.yml에서 정보를 불러오는데 문제가 발생하였습니다.");
