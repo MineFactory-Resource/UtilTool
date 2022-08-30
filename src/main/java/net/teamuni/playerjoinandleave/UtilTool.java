@@ -53,7 +53,6 @@ public final class UtilTool extends JavaPlugin implements Listener {
         getConfigMessages();
         CommandsManager.createCommandsYml();
         PlayerUuidManager.createCommandsYml();
-        IgnorePlayerManager.createCommandsYml();
         registerCommands();
         BroadCasterCooldown.setupCooldown();
         getCommand("utiltool").setTabCompleter(new CommandTabCompleter());
@@ -64,7 +63,6 @@ public final class UtilTool extends JavaPlugin implements Listener {
     @Override
     public void onDisable() {
         PlayerUuidManager.save();
-        IgnorePlayerManager.save();
     }
 
     @Override
@@ -82,8 +80,6 @@ public final class UtilTool extends JavaPlugin implements Listener {
                     CommandsManager.save();
                     PlayerUuidManager.save();
                     PlayerUuidManager.reload();
-                    IgnorePlayerManager.save();
-                    IgnorePlayerManager.reload();
                     registerCommands();
                     getSpawnInfo();
                     player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "UtilTool has been reloaded!");
