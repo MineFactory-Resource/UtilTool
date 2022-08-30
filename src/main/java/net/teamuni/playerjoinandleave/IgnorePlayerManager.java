@@ -6,34 +6,34 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.io.IOException;
 
-public class PlayerUuidManager {
-
+public class IgnorePlayerManager {
     private static final UtilTool main = UtilTool.getPlugin(UtilTool.class);
     private static File file;
-    private static FileConfiguration playersFile;
+    private static FileConfiguration ignoreplayersFile;
 
-    public static void createPlayersYml() {
-        file = new File(main.getDataFolder(), "players.yml");
+    public static void createCommandsYml() {
+        file = new File(main.getDataFolder(), "ignoreplayer.yml");
 
         if (!file.exists()) {
-            main.saveResource("players.yml", false);
+            main.saveResource("ignoreplayer.yml", false);
         }
-        playersFile = YamlConfiguration.loadConfiguration(file);
+        ignoreplayersFile = YamlConfiguration.loadConfiguration(file);
     }
 
     public static FileConfiguration get() {
-        return playersFile;
+        return ignoreplayersFile;
     }
 
     public static void save() {
         try {
-            playersFile.save(file);
+            ignoreplayersFile.save(file);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public static void reload() {
-        playersFile = YamlConfiguration.loadConfiguration(file);
+        ignoreplayersFile = YamlConfiguration.loadConfiguration(file);
     }
 }
+
