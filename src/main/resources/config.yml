@@ -15,9 +15,6 @@
 first_time_join_message: "(첫 입장 메시지)"
 join_message: "(입장 메시지)"
 leave_message: "(퇴장 메시지)"
-shift_right_click_command: ""
-enable_world:
-  - ""
 title: ""
 subtitle: ""
 fadeIn: 0
