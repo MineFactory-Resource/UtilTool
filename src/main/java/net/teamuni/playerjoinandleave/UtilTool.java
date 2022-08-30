@@ -35,6 +35,8 @@ public final class UtilTool extends JavaPlugin implements Listener {
     String leaveMessage = "";
     String firstTimeJoinMessage = "";
     String shiftRightClickCommand = "";
+    String title = "";
+    String subtitle = "";
     List<String> commandsList;
     World world;
     double x;
@@ -42,6 +44,9 @@ public final class UtilTool extends JavaPlugin implements Listener {
     double z;
     float yaw;
     float pitch;
+    int fadeIn;
+    int stay;
+    int fadeOut;
 
     @Override
     public void onEnable() {
@@ -107,6 +112,7 @@ public final class UtilTool extends JavaPlugin implements Listener {
         if (Arrays.asList(spawn).contains(cmd.getName()) && player.hasPermission("utiltool.spawn")) {
             player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "이동 중...");
             player.teleport(new Location(world, x, y, z, yaw, pitch));
+            player.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
             return false;
         }
         if (cmd.getName().equalsIgnoreCase("채팅청소") && player.hasPermission("utiltool.mychatclear")) {
@@ -306,11 +312,16 @@ public final class UtilTool extends JavaPlugin implements Listener {
     }
 
     public void getConfigMessages() {
+        fadeIn = getConfig().getInt("fadeIn");
+        stay = getConfig().getInt("stay");
+        fadeOut = getConfig().getInt("fadeOut");
         try {
             joinMessage = getConfig().getString("join_message");
             leaveMessage = getConfig().getString("leave_message");
             firstTimeJoinMessage = getConfig().getString("first_time_join_message");
             shiftRightClickCommand = getConfig().getString("shift_right_click_command");
+            title = getConfig().getString("title");
+            subtitle = getConfig().getString("subtitle");
         } catch (NullPointerException e) {
             e.printStackTrace();
             getLogger().info("config.yml에서 정보를 불러오는데 문제가 발생하였습니다.");

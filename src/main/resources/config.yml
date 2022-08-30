@@ -18,3 +18,8 @@ leave_message: "(퇴장 메시지)"
 shift_right_click_command: ""
 enable_world:
   - ""
+title: ""
+subtitle: ""
+fadeIn: 0
+stay: 0
+fadeOut: 0
