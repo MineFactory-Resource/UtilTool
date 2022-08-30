@@ -20,6 +20,16 @@ public class CommandTabCompleter implements TabCompleter {
             }
             return tabCompleteList;
         }
+        if (command.getName().equalsIgnoreCase("gm")) {
+            ArrayList<String> commandArguments = new ArrayList<>();
+            if (args.length == 1) {
+                commandArguments.add("0");
+                commandArguments.add("1");
+                commandArguments.add("2");
+                commandArguments.add("3");
+            }
+            return commandArguments;
+        }
         return null;
     }
 }

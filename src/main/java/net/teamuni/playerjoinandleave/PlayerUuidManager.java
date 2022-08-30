@@ -1,6 +1,5 @@
 package net.teamuni.playerjoinandleave;
 
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -12,6 +11,7 @@ public class PlayerUuidManager {
     private static final UtilTool main = UtilTool.getPlugin(UtilTool.class);
     private static File file;
     private static FileConfiguration playersFile;
+
 
     public static void createCommandsYml() {
         file = new File(main.getDataFolder(), "players.yml");

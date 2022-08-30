@@ -3,10 +3,7 @@ package net.teamuni.playerjoinandleave;
 import java.util.List;
 
 import me.clip.placeholderapi.PlaceholderAPI;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.command.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -57,6 +54,7 @@ public final class UtilTool extends JavaPlugin implements Listener {
         registerCommands();
         BroadCasterCooldown.setupCooldown();
         getCommand("utiltool").setTabCompleter(new CommandTabCompleter());
+        getCommand("gm").setTabCompleter(new CommandTabCompleter());
         getSpawnInfo();
     }
 
@@ -119,6 +117,69 @@ public final class UtilTool extends JavaPlugin implements Listener {
             }
             player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "All Chat has been cleaned!");
             return false;
+        }
+        if (cmd.getName().equalsIgnoreCase("gmc") && player.hasPermission("utiltool.gamemode")) {
+            if (args.length > 0){
+                Player target = Bukkit.getPlayer(args[0]);
+                if (target != null){
+                    target.setGameMode(GameMode.CREATIVE);
+                    target.sendMessage("§e[알림] §f현재 게임모드가 크리에이티브 모드로 변경되었습니다.");
+                    player.sendMessage("§e[알림] §f현재" + args[0] + " 님의 게임모드가 크리에이티브 모드로 변경되었습니다.");
+
+                }
+            } else {
+                player.setGameMode(GameMode.CREATIVE);
+                player.sendMessage("§e[알림] §f현재 게임모드가 크리에이티브 모드로 변경되었습니다.");
+                return false;
+            }
+        }
+        if (cmd.getName().equalsIgnoreCase("gms") && player.hasPermission("utiltool.gamemode")) {
+            if (args.length > 0){
+                Player target = Bukkit.getPlayer(args[0]);
+                if (target != null){
+                    target.setGameMode(GameMode.SURVIVAL);
+                    target.sendMessage("§e[알림] §f현재 게임모드가 크리에이티브 모드로 변경되었습니다.");
+                    player.sendMessage("§e[알림] §f현재" + args[0] + " 님의 게임모드가 크리에이티브 모드로 변경되었습니다.");
+
+                }
+            } else {
+                player.setGameMode(GameMode.SURVIVAL);
+                player.sendMessage("§e[알림] §f현재 게임모드가 크리에이티브 모드로 변경되었습니다.");
+                return false;
+            }
+        }
+        if (cmd.getName().equalsIgnoreCase("gm") && player.hasPermission("utiltool.gamemode")) {
+            if (args.length == 1) {
+                switch (args[0]) {
+                    case "0":
+                        player.setGameMode(GameMode.SURVIVAL);
+                        player.sendMessage("§e[알림] §f현재 게임모드가 서바이벌 모드로 변경되었습니다.");
+                        break;
+                    case "1":
+                        player.setGameMode(GameMode.CREATIVE);
+                        player.sendMessage("§e[알림] §f현재 게임모드가 크리에이티브 모드로 변경되었습니다.");
+                        break;
+                    case "2":
+                        player.setGameMode(GameMode.ADVENTURE);
+                        player.sendMessage("§e[알림] §f현재 게임모드가 모험 모드로 변경되었습니다.");
+                        break;
+                    case "3":
+                        player.setGameMode(GameMode.SPECTATOR);
+                        player.sendMessage("§e[알림] §f현재 게임모드가 관전자 모드로 변경되었습니다.");
+                        break;
+                    default:
+                        player.sendMessage("§6/gm 0 - 게임모드를 서바이벌 모드로 변경합니다.");
+                        player.sendMessage("§6/gm 1 - 게임모드를 크리에이티브 모드로 변경합니다.");
+                        player.sendMessage("§6/gm 2 - 게임모드를 모험 모드로 변경합니다.");
+                        player.sendMessage("§6/gm 3 - 게임모드를 관전자 모드로 변경합니다.");
+                        break;
+                }
+            } else {
+                player.sendMessage("§6/gm 0 - 게임모드를 서바이벌 모드로 변경합니다.");
+                player.sendMessage("§6/gm 1 - 게임모드를 크리에이티브 모드로 변경합니다.");
+                player.sendMessage("§6/gm 2 - 게임모드를 모험 모드로 변경합니다.");
+                player.sendMessage("§6/gm 3 - 게임모드를 관전자 모드로 변경합니다.");
+            }
         }
 
         if (Arrays.asList(whisper).contains(cmd.getName()) && player.hasPermission("utiltool.whisper")) {

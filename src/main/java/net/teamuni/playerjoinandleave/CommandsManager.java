@@ -1,6 +1,5 @@
 package net.teamuni.playerjoinandleave;
 
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -32,6 +31,7 @@ public class CommandsManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
     public static void reload() {
