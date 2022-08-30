@@ -1,0 +1,14 @@
+# first_time_join_message - 첫 입장 메시지
+# join_message - 입장 메시지
+# leave_message - 퇴장 메시지
+# teleport_message - 플레이어가 텔레포트 될 때 출력되는 메시지
+
+# 메시지 기능은 PlaceholderAPI를 지원합니다.
+# 색을 사용하시려면 마인크래프트 색상 코드를 사용해 주세요.
+# 사용 예시:
+# join_message: "&e&l환영합니다!"
+
+first_time_join_message: "(첫 입장 메시지)"
+join_message: "(입장 메시지)"
+leave_message: "(퇴장 메시지)"
+teleport_message: ""

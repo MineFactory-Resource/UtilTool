@@ -11,7 +11,7 @@ public class IgnorePlayerManager {
     private static File file;
     private static FileConfiguration ignoreplayersFile;
 
-    public static void createCommandsYml() {
+    public static void createIgnorePlayerYml() {
         file = new File(main.getDataFolder(), "ignoreplayer.yml");
 
         if (!file.exists()) {

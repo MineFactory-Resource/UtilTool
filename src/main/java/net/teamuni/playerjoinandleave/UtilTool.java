@@ -35,6 +35,7 @@ public final class UtilTool extends JavaPlugin implements Listener {
     String leaveMessage = "";
     String firstTimeJoinMessage = "";
     String shiftRightClickCommand = "";
+    String teleportMessage = "";
     String title = "";
     String subtitle = "";
     List<String> commandsList;
@@ -54,8 +55,9 @@ public final class UtilTool extends JavaPlugin implements Listener {
         this.saveDefaultConfig();
         getConfigMessages();
         CommandsManager.createCommandsYml();
-        PlayerUuidManager.createCommandsYml();
-        IgnorePlayerManager.createCommandsYml();
+        PlayerUuidManager.createPlayersYml();
+        IgnorePlayerManager.createIgnorePlayerYml();
+        MessagesManager.createMessagesYml();
         registerCommands();
         BroadCasterCooldown.setupCooldown();
         getCommand("utiltool").setTabCompleter(new CommandTabCompleter());
@@ -82,19 +84,18 @@ public final class UtilTool extends JavaPlugin implements Listener {
                     saveConfig();
                     getConfigMessages();
                     CommandsManager.reload();
-                    CommandsManager.save();
                     PlayerUuidManager.save();
                     PlayerUuidManager.reload();
                     IgnorePlayerManager.save();
                     IgnorePlayerManager.reload();
+                    MessagesManager.reload();
                     registerCommands();
                     getSpawnInfo();
                     player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "UtilTool has been reloaded!");
-                    return false;
-                }
-            } else {
-                player.sendMessage("§e[알림] §f올바르지 않은 명령어입니다.");
-                return false;
+                  }
+              } else {
+                  player.sendMessage("§e[알림] §f올바르지 않은 명령어입니다.");
+                  return false;
             }
         }
         if (cmd.getName().equalsIgnoreCase("setspawn") && player.hasPermission("utiltool.setspawn")) {
@@ -110,7 +111,7 @@ public final class UtilTool extends JavaPlugin implements Listener {
             return false;
         }
         if (Arrays.asList(spawn).contains(cmd.getName()) && player.hasPermission("utiltool.spawn")) {
-            player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "이동 중...");
+            player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + teleportMessage);
             player.teleport(new Location(world, x, y, z, yaw, pitch));
             player.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
             return false;
@@ -316,9 +317,10 @@ public final class UtilTool extends JavaPlugin implements Listener {
         stay = getConfig().getInt("stay");
         fadeOut = getConfig().getInt("fadeOut");
         try {
-            joinMessage = getConfig().getString("join_message");
-            leaveMessage = getConfig().getString("leave_message");
-            firstTimeJoinMessage = getConfig().getString("first_time_join_message");
+            joinMessage = MessagesManager.get().getString("join_message");
+            leaveMessage = MessagesManager.get().getString("leave_message");
+            firstTimeJoinMessage = MessagesManager.get().getString("first_time_join_message");
+            teleportMessage = MessagesManager.get().getString("teleport_message");
             shiftRightClickCommand = getConfig().getString("shift_right_click_command");
             title = getConfig().getString("title");
             subtitle = getConfig().getString("subtitle");
