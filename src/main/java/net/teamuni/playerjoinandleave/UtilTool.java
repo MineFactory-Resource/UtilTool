@@ -7,7 +7,6 @@ import org.bukkit.*;
 import org.bukkit.command.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -24,7 +23,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
-import org.bukkit.event.player.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -55,7 +53,6 @@ public final class UtilTool extends JavaPlugin implements Listener {
         getConfigMessages();
         CommandsManager.createCommandsYml();
         PlayerUuidManager.createPlayersYml();
-        IgnorePlayerManager.createCommandsYml();
         registerCommands();
         BroadCasterCooldown.setupCooldown();
         getCommand("utiltool").setTabCompleter(new CommandTabCompleter());
@@ -66,14 +63,12 @@ public final class UtilTool extends JavaPlugin implements Listener {
     @Override
     public void onDisable() {
         PlayerUuidManager.save();
-        IgnorePlayerManager.save();
     }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, Command cmd, @NotNull String label, String[] args) {
         Player player = (Player) sender;
         String[] spawn = {"spawn", "tmvhs", "스폰", "넴주"};
-        String[] whisper = {"귓", "귓속말", "rnlt", "rnltthrakf", "r", "w", "m", "msg", "whisper"};
 
         if (cmd.getName().equalsIgnoreCase("utiltool") && player.hasPermission("utiltool.reload")) {
             if (args.length > 0) {
@@ -85,8 +80,6 @@ public final class UtilTool extends JavaPlugin implements Listener {
                     CommandsManager.save();
                     PlayerUuidManager.save();
                     PlayerUuidManager.reload();
-                    IgnorePlayerManager.save();
-                    IgnorePlayerManager.reload();
                     registerCommands();
                     getSpawnInfo();
                     player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "UtilTool has been reloaded!");
@@ -191,66 +184,6 @@ public final class UtilTool extends JavaPlugin implements Listener {
                 player.sendMessage("§6/gm 2 - 게임모드를 모험 모드로 변경합니다.");
                 player.sendMessage("§6/gm 3 - 게임모드를 관전자 모드로 변경합니다.");
             }
-        }
-
-        if (Arrays.asList(whisper).contains(cmd.getName()) && player.hasPermission("utiltool.whisper")) {
-            if (args.length > 0) {
-                Player target = Bukkit.getPlayer(args[0]);
-                if (!IgnorePlayerManager.get().getStringList("Ignores").contains(args[0] + "." + player.getName())) {
-                    String targetMsg = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
-                    if (target != null) {
-                        target.sendMessage("§e[ §6" + player.getName() + " §f→ §c나 §e]§f " + targetMsg);
-                        player.sendMessage("§e[ §c나" + " §f→ §6" + args[0] + " §e]§f " + targetMsg);
-                    } else {
-                        player.sendMessage("§e[알림] §f서버에 존재하지 않는 플레이어입니다!");
-                    }
-                } else {
-                    player.sendMessage("§e[알림] §a" + args[0] + " §f님이 귓속말을 차단했습니다!");
-                }
-            } else {
-                player.sendMessage("§6/whisper [상대방] [할말] - [할말]을 [상대방] 에게 전달합니다.");
-            }
-        }
-        if (cmd.getName().equalsIgnoreCase("차단") && player.hasPermission("utiltool.whisper")) {
-            if (args.length > 0) {
-                String ignorePlayer = player.getName() + "." + args[0];
-                if (!player.getName().equals(args[0])) {
-                    if (!IgnorePlayerManager.get().getStringList("Ignores").contains(ignorePlayer)) {
-                        List<String> playerIgnoreList = IgnorePlayerManager.get().getStringList("Ignores");
-                        playerIgnoreList.add(ignorePlayer);
-                        IgnorePlayerManager.get().set("Ignores", playerIgnoreList);
-                        player.sendMessage("§e[알림] §a" + args[0] + " §f님을 차단했습니다!");
-                    } else {
-                        player.sendMessage("§e[알림] §f이미 차단한 플레이어입니다!");
-                    }
-                } else {
-                    player.sendMessage("§e[알림] §f자기 자신을 차단할 수 없습니다!");
-                }
-            } else {
-                player.sendMessage("§6/차단 [상대] - 상대의 귓속말을 차단합니다.");
-                player.sendMessage("§6/차단해제 [상대] - 상대를 차단한 것을 해제합니다.");
-            }
-        }
-        if (cmd.getName().equalsIgnoreCase("차단해제") && player.hasPermission("utiltool.whisper")) {
-            if (args.length > 0) {
-                if (!player.getName().equals(args[0])) {
-                    String targetIgnore = player.getName() + "." + args[0];
-                    if (IgnorePlayerManager.get().getStringList("Ignores").contains(targetIgnore)) {
-                        List<String> playerIgnoreList = IgnorePlayerManager.get().getStringList("Ignores");
-                        playerIgnoreList.remove(targetIgnore);
-                        IgnorePlayerManager.get().set("Ignores", playerIgnoreList);
-                        player.sendMessage("§e[알림] §a" + args[0] + " §f님을 차단한 것을 해제했습니다!");
-                    } else {
-                        player.sendMessage("§e[알림] §f차단 당하지 않은 플레이어입니다!");
-                    }
-                } else {
-                    player.sendMessage("§e[알림] §f자기 자신을 차단 해제할 수 없습니다!");
-                }
-            } else {
-                player.sendMessage("§6/차단 [상대] - 상대의 귓속말을 차단합니다.");
-                player.sendMessage("§6/차단해제 [상대] - 상대를 차단한 것을 해제합니다.");
-            }
-            return false;
         }
         if (cmd.getName().equalsIgnoreCase("확성기") && player.hasPermission("utiltool.broadcaster")) {
             String lore = String.join(" ", Arrays.copyOfRange(args, 0, args.length));
@@ -386,19 +319,6 @@ public final class UtilTool extends JavaPlugin implements Listener {
                 float pitch = (float) getConfig().getDouble("spawnpoint.pitch");
                 player.teleport(new Location(world, x, y, z, yaw, pitch));
                 player.setFallDistance(0);
-            }
-        }
-    }
-
-    @EventHandler
-    public void onPlayerInteractAtEntity(PlayerInteractEntityEvent event) {
-        Player p = event.getPlayer();
-        List<String> rightClickWorld = getConfig().getStringList("enable_world");
-        if (event.getRightClicked().getType().equals(EntityType.PLAYER) && p.isSneaking()) {
-            if (rightClickWorld.stream().anyMatch(current_world -> p.getWorld().equals(Bukkit.getWorld(current_world)))) {
-                String clickPlayerName = (event.getRightClicked()).getName();
-                String replacedShiftRightClick = (shiftRightClickCommand.replace("%player%", clickPlayerName));
-                p.performCommand(replacedShiftRightClick);
             }
         }
     }
