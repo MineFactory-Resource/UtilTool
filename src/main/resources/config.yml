@@ -1,11 +1,3 @@
-#쉬프트+우클릭 명령어에서 쉬프트+우클릭을 사용한 플레이어의 닉네임을 불러오려면 %player%를 통해 불러올 수 있습니다.
-# 사용 예시:
-# shift_right_click_command: "msg Hello, %player%!"
-#쉬프트+우클릭 기능을 사용할 월드 이름 리스트를 enable_world에 입력해 주세요.
-
-shift_right_click_command: ""
-enable_world:
-  - ""
 title: ""
 subtitle: ""
 fadeIn: 0
