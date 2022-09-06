@@ -142,7 +142,7 @@ public final class UtilTool extends JavaPlugin implements Listener {
                 if (target != null){
                     target.setGameMode(GameMode.CREATIVE);
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&', createModeMessage));
-                    String targetCreateMessage = (ChatColor.translateAlternateColorCodes('&', targetCreateModeMessage));
+                    String targetCreateMessage = ChatColor.translateAlternateColorCodes('&', targetCreateModeMessage);
                     player.sendMessage(targetCreateMessage.replace("%target%", args[0]));
                 }
             } else {
@@ -157,7 +157,7 @@ public final class UtilTool extends JavaPlugin implements Listener {
                 if (target != null){
                     target.setGameMode(GameMode.SURVIVAL);
                     target.sendMessage(ChatColor.translateAlternateColorCodes('&', survivalModeMessage));
-                    String targetSurvivalMessage = (ChatColor.translateAlternateColorCodes('&', targetSurvivalModeMessage));
+                    String targetSurvivalMessage = ChatColor.translateAlternateColorCodes('&', targetSurvivalModeMessage);
                     player.sendMessage(targetSurvivalMessage.replace("%target%", args[0]));
 
                 }
