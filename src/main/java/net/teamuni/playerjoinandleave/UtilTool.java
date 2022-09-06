@@ -33,6 +33,17 @@ public final class UtilTool extends JavaPlugin implements Listener {
     String leaveMessage = "";
     String firstTimeJoinMessage = "";
     String shiftRightClickCommand = "";
+    String createModeMessage = "";
+
+    String survivalModeMessage = "";
+
+    String adventureModeMessage = "";
+
+    String specterModeMessage = "";
+
+    String targetCreateModeMessage = "";
+
+    String targetSurvivalModeMessage = "";
     String title = "";
     String subtitle = "";
     List<String> commandsList;
@@ -51,8 +62,9 @@ public final class UtilTool extends JavaPlugin implements Listener {
         this.getServer().getPluginManager().registerEvents(this, this);
         this.saveDefaultConfig();
         getConfigMessages();
-        CommandsManager.createCommandsYml();
+        MessagesManager.createMessagesYml();
         PlayerUuidManager.createPlayersYml();
+        CommandsManager.createCommandsYml();
         registerCommands();
         BroadCasterCooldown.setupCooldown();
         getCommand("utiltool").setTabCompleter(new CommandTabCompleter());
@@ -81,6 +93,8 @@ public final class UtilTool extends JavaPlugin implements Listener {
                     PlayerUuidManager.save();
                     PlayerUuidManager.reload();
                     registerCommands();
+                    MessagesManager.save();
+                    MessagesManager.reload();
                     getSpawnInfo();
                     player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "UtilTool has been reloaded!");
                     return false;
@@ -127,13 +141,13 @@ public final class UtilTool extends JavaPlugin implements Listener {
                 Player target = Bukkit.getPlayer(args[0]);
                 if (target != null){
                     target.setGameMode(GameMode.CREATIVE);
-                    target.sendMessage("§e[알림] §f현재 게임모드가 크리에이티브 모드로 변경되었습니다.");
-                    player.sendMessage("§e[알림] §f현재" + args[0] + " 님의 게임모드가 크리에이티브 모드로 변경되었습니다.");
-
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', createModeMessage));
+                    String targetCreateMessage = ChatColor.translateAlternateColorCodes('&', targetCreateModeMessage);
+                    player.sendMessage(targetCreateMessage.replace("%target%", args[0]));
                 }
             } else {
                 player.setGameMode(GameMode.CREATIVE);
-                player.sendMessage("§e[알림] §f현재 게임모드가 크리에이티브 모드로 변경되었습니다.");
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', createModeMessage));
                 return false;
             }
         }
@@ -142,13 +156,14 @@ public final class UtilTool extends JavaPlugin implements Listener {
                 Player target = Bukkit.getPlayer(args[0]);
                 if (target != null){
                     target.setGameMode(GameMode.SURVIVAL);
-                    target.sendMessage("§e[알림] §f현재 게임모드가 크리에이티브 모드로 변경되었습니다.");
-                    player.sendMessage("§e[알림] §f현재" + args[0] + " 님의 게임모드가 크리에이티브 모드로 변경되었습니다.");
+                    target.sendMessage(ChatColor.translateAlternateColorCodes('&', survivalModeMessage));
+                    String targetSurvivalMessage = ChatColor.translateAlternateColorCodes('&', targetSurvivalModeMessage);
+                    player.sendMessage(targetSurvivalMessage.replace("%target%", args[0]));
 
                 }
             } else {
                 player.setGameMode(GameMode.SURVIVAL);
-                player.sendMessage("§e[알림] §f현재 게임모드가 크리에이티브 모드로 변경되었습니다.");
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', survivalModeMessage));
                 return false;
             }
         }
@@ -157,19 +172,19 @@ public final class UtilTool extends JavaPlugin implements Listener {
                 switch (args[0]) {
                     case "0":
                         player.setGameMode(GameMode.SURVIVAL);
-                        player.sendMessage("§e[알림] §f현재 게임모드가 서바이벌 모드로 변경되었습니다.");
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', survivalModeMessage));
                         break;
                     case "1":
                         player.setGameMode(GameMode.CREATIVE);
-                        player.sendMessage("§e[알림] §f현재 게임모드가 크리에이티브 모드로 변경되었습니다.");
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', createModeMessage));
                         break;
                     case "2":
                         player.setGameMode(GameMode.ADVENTURE);
-                        player.sendMessage("§e[알림] §f현재 게임모드가 모험 모드로 변경되었습니다.");
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', adventureModeMessage));
                         break;
                     case "3":
                         player.setGameMode(GameMode.SPECTATOR);
-                        player.sendMessage("§e[알림] §f현재 게임모드가 관전자 모드로 변경되었습니다.");
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', specterModeMessage));
                         break;
                     default:
                         player.sendMessage("§6/gm 0 - 게임모드를 서바이벌 모드로 변경합니다.");
@@ -249,10 +264,16 @@ public final class UtilTool extends JavaPlugin implements Listener {
         stay = getConfig().getInt("stay");
         fadeOut = getConfig().getInt("fadeOut");
         try {
-            joinMessage = getConfig().getString("join_message");
-            leaveMessage = getConfig().getString("leave_message");
-            firstTimeJoinMessage = getConfig().getString("first_time_join_message");
-            shiftRightClickCommand = getConfig().getString("shift_right_click_command");
+            joinMessage = MessagesManager.get().getString("join_message");
+            leaveMessage = MessagesManager.get().getString("leave_message");
+            firstTimeJoinMessage = MessagesManager.get().getString("first_time_join_message");
+            shiftRightClickCommand = MessagesManager.get().getString("shift_right_click_command");
+            createModeMessage = MessagesManager.get().getString("create_mode_message");
+            survivalModeMessage = MessagesManager.get().getString("survival_mode_message");
+            adventureModeMessage = MessagesManager.get().getString("adventure_mode_message");
+            specterModeMessage = MessagesManager.get().getString("specter_mode_message");
+            targetCreateModeMessage = MessagesManager.get().getString("target_create_mode_message");
+            targetSurvivalModeMessage = MessagesManager.get().getString("target_survival_mode_message");
             title = getConfig().getString("title");
             subtitle = getConfig().getString("subtitle");
         } catch (NullPointerException e) {
