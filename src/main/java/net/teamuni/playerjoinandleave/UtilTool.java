@@ -32,6 +32,9 @@ public final class UtilTool extends JavaPlugin implements Listener {
     String joinMessage = "";
     String leaveMessage = "";
     String firstTimeJoinMessage = "";
+    String setSpawnMessage = "";
+    String teleportMessage = "";
+    String unknownCommandMessage = "";
     String createModeMessage = "";
 
     String survivalModeMessage = "";
@@ -43,6 +46,14 @@ public final class UtilTool extends JavaPlugin implements Listener {
     String targetCreateModeMessage = "";
 
     String targetSurvivalModeMessage = "";
+    String myChatClearMessage = "";
+    String allChatClearMessage = "";
+    String broadcastCommandMessage = "";
+    String broadcastCooldownMessage = "";
+    String messageGm0 = "";
+    String messageGm1 = "";
+    String messageGm2 = "";
+    String messageGm3 = "";
     String title = "";
     String subtitle = "";
     List<String> commandsList;
@@ -99,7 +110,7 @@ public final class UtilTool extends JavaPlugin implements Listener {
                     return false;
                 }
             } else {
-                player.sendMessage("§e[알림] §f올바르지 않은 명령어입니다.");
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', unknownCommandMessage));
                 return false;
             }
         }
@@ -112,11 +123,11 @@ public final class UtilTool extends JavaPlugin implements Listener {
             getConfig().set("spawnpoint.pitch", player.getLocation().getPitch());
             saveConfig();
             getSpawnInfo();
-            player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "Respawn point has been set!");
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', setSpawnMessage));
             return false;
         }
         if (Arrays.asList(spawn).contains(cmd.getName()) && player.hasPermission("utiltool.spawn")) {
-            player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "이동 중...");
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', teleportMessage));
             player.teleport(new Location(world, x, y, z, yaw, pitch));
             player.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
             return false;
@@ -125,14 +136,14 @@ public final class UtilTool extends JavaPlugin implements Listener {
             for (int myChatClearCount = 0; myChatClearCount < 100; myChatClearCount++) {
                 player.sendMessage("");
             }
-            player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "Your chat has been cleaned!");
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', myChatClearMessage));
             return false;
         }
         if (cmd.getName().equalsIgnoreCase("전체채팅청소") && player.hasPermission("utiltool.allchatclear")) {
             for (int allChatClearCount = 0; allChatClearCount < 100; allChatClearCount++) {
                 getServer().broadcastMessage("");
             }
-            player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "All Chat has been cleaned!");
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', allChatClearMessage));
             return false;
         }
         if (cmd.getName().equalsIgnoreCase("gmc") && player.hasPermission("utiltool.gamemode")) {
@@ -185,17 +196,17 @@ public final class UtilTool extends JavaPlugin implements Listener {
                         player.sendMessage(ChatColor.translateAlternateColorCodes('&', specterModeMessage));
                         break;
                     default:
-                        player.sendMessage("§6/gm 0 - 게임모드를 서바이벌 모드로 변경합니다.");
-                        player.sendMessage("§6/gm 1 - 게임모드를 크리에이티브 모드로 변경합니다.");
-                        player.sendMessage("§6/gm 2 - 게임모드를 모험 모드로 변경합니다.");
-                        player.sendMessage("§6/gm 3 - 게임모드를 관전자 모드로 변경합니다.");
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', messageGm0));
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', messageGm1));
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', messageGm2));
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', messageGm3));
                         break;
                 }
             } else {
-                player.sendMessage("§6/gm 0 - 게임모드를 서바이벌 모드로 변경합니다.");
-                player.sendMessage("§6/gm 1 - 게임모드를 크리에이티브 모드로 변경합니다.");
-                player.sendMessage("§6/gm 2 - 게임모드를 모험 모드로 변경합니다.");
-                player.sendMessage("§6/gm 3 - 게임모드를 관전자 모드로 변경합니다.");
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', messageGm0));
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', messageGm1));
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', messageGm2));
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', messageGm3));
             }
         }
         if (cmd.getName().equalsIgnoreCase("확성기") && player.hasPermission("utiltool.broadcaster")) {
@@ -207,10 +218,11 @@ public final class UtilTool extends JavaPlugin implements Listener {
                     Bukkit.broadcastMessage("");
                     BroadCasterCooldown.setCooldown(player, 300);
                 } else {
-                    player.sendMessage("§6/확성기 [메세지] - [메세지]를 전체채팅으로 전달합니다.");
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', broadcastCommandMessage));
                 }
             } else {
-                player.sendMessage("§e[알림] §f확성기 재사용까지 §a" + BroadCasterCooldown.getCooldown(player) + "§f초 남았습니다");
+                String broadcastMessage = ChatColor.translateAlternateColorCodes('&', broadcastCooldownMessage);
+                player.sendMessage(broadcastMessage.replace("%time%", Integer.toString(BroadCasterCooldown.getCooldown(player))));
             }
             return false;
         }
@@ -265,12 +277,23 @@ public final class UtilTool extends JavaPlugin implements Listener {
             joinMessage = MessagesManager.get().getString("join_message");
             leaveMessage = MessagesManager.get().getString("leave_message");
             firstTimeJoinMessage = MessagesManager.get().getString("first_time_join_message");
+            setSpawnMessage = MessagesManager.get().getString("set_spawn_message");
+            teleportMessage = MessagesManager.get().getString("teleport_message");
+            unknownCommandMessage = MessagesManager.get().getString("unknown_command_message");
             createModeMessage = MessagesManager.get().getString("create_mode_message");
             survivalModeMessage = MessagesManager.get().getString("survival_mode_message");
             adventureModeMessage = MessagesManager.get().getString("adventure_mode_message");
             specterModeMessage = MessagesManager.get().getString("specter_mode_message");
             targetCreateModeMessage = MessagesManager.get().getString("target_create_mode_message");
             targetSurvivalModeMessage = MessagesManager.get().getString("target_survival_mode_message");
+            myChatClearMessage = MessagesManager.get().getString("my_chat_clear_message");
+            allChatClearMessage = MessagesManager.get().getString("all_chat_clear_message");
+            broadcastCommandMessage = MessagesManager.get().getString("broadcast_command_message");
+            broadcastCooldownMessage = MessagesManager.get().getString("broadcast_cooldown_message");
+            messageGm0 = MessagesManager.get().getString("message_gm_0");
+            messageGm1 = MessagesManager.get().getString("message_gm_1");
+            messageGm2 = MessagesManager.get().getString("message_gm_2");
+            messageGm3 = MessagesManager.get().getString("message_gm_3");
             title = getConfig().getString("title");
             subtitle = getConfig().getString("subtitle");
         } catch (NullPointerException e) {
