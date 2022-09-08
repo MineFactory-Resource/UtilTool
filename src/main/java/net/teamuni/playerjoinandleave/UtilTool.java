@@ -32,7 +32,6 @@ public final class UtilTool extends JavaPlugin implements Listener {
     String joinMessage = "";
     String leaveMessage = "";
     String firstTimeJoinMessage = "";
-    String shiftRightClickCommand = "";
     String createModeMessage = "";
 
     String survivalModeMessage = "";
@@ -61,7 +60,6 @@ public final class UtilTool extends JavaPlugin implements Listener {
     public void onEnable() {
         this.getServer().getPluginManager().registerEvents(this, this);
         this.saveDefaultConfig();
-        getConfigMessages();
         MessagesManager.createMessagesYml();
         PlayerUuidManager.createPlayersYml();
         CommandsManager.createCommandsYml();
@@ -70,6 +68,7 @@ public final class UtilTool extends JavaPlugin implements Listener {
         getCommand("utiltool").setTabCompleter(new CommandTabCompleter());
         getCommand("gm").setTabCompleter(new CommandTabCompleter());
         getSpawnInfo();
+        getConfigMessages();
     }
 
     @Override
@@ -88,14 +87,14 @@ public final class UtilTool extends JavaPlugin implements Listener {
                     reloadConfig();
                     saveConfig();
                     getConfigMessages();
-                    CommandsManager.reload();
                     CommandsManager.save();
+                    CommandsManager.reload();
                     PlayerUuidManager.save();
                     PlayerUuidManager.reload();
-                    registerCommands();
                     MessagesManager.save();
                     MessagesManager.reload();
                     getSpawnInfo();
+                    registerCommands();
                     player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "UtilTool has been reloaded!");
                     return false;
                 }
@@ -159,7 +158,6 @@ public final class UtilTool extends JavaPlugin implements Listener {
                     target.sendMessage(ChatColor.translateAlternateColorCodes('&', survivalModeMessage));
                     String targetSurvivalMessage = ChatColor.translateAlternateColorCodes('&', targetSurvivalModeMessage);
                     player.sendMessage(targetSurvivalMessage.replace("%target%", args[0]));
-
                 }
             } else {
                 player.setGameMode(GameMode.SURVIVAL);
@@ -267,7 +265,6 @@ public final class UtilTool extends JavaPlugin implements Listener {
             joinMessage = MessagesManager.get().getString("join_message");
             leaveMessage = MessagesManager.get().getString("leave_message");
             firstTimeJoinMessage = MessagesManager.get().getString("first_time_join_message");
-            shiftRightClickCommand = MessagesManager.get().getString("shift_right_click_command");
             createModeMessage = MessagesManager.get().getString("create_mode_message");
             survivalModeMessage = MessagesManager.get().getString("survival_mode_message");
             adventureModeMessage = MessagesManager.get().getString("adventure_mode_message");
