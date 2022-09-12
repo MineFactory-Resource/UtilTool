@@ -274,32 +274,31 @@ public final class UtilTool extends JavaPlugin implements Listener {
         stay = getConfig().getInt("stay");
         fadeOut = getConfig().getInt("fadeOut");
         try {
-            joinMessage = ChatColor.translateAlternateColorCodes('&',(Objects.requireNonNull(MessagesManager.get().getString("join_message"))));
-            leaveMessage = ChatColor.translateAlternateColorCodes('&',(Objects.requireNonNull(MessagesManager.get().getString("leave_message"))));
-            firstTimeJoinMessage = ChatColor.translateAlternateColorCodes('&',(Objects.requireNonNull(MessagesManager.get().getString("first_time_join_message"))));
-            setSpawnMessage = ChatColor.translateAlternateColorCodes('&',(Objects.requireNonNull(MessagesManager.get().getString("set_spawn_message"))));
-            teleportMessage = ChatColor.translateAlternateColorCodes('&',(Objects.requireNonNull(MessagesManager.get().getString("teleport_message"))));
-            unknownCommandMessage = ChatColor.translateAlternateColorCodes('&',(Objects.requireNonNull(MessagesManager.get().getString("unknown_command_message"))));
-            createModeMessage = ChatColor.translateAlternateColorCodes('&',(Objects.requireNonNull(MessagesManager.get().getString("create_mode_message"))));
-            survivalModeMessage = ChatColor.translateAlternateColorCodes('&',(Objects.requireNonNull(MessagesManager.get().getString("survival_mode_message"))));
-            adventureModeMessage = ChatColor.translateAlternateColorCodes('&',(Objects.requireNonNull(MessagesManager.get().getString("adventure_mode_message"))));
-            specterModeMessage = ChatColor.translateAlternateColorCodes('&',(Objects.requireNonNull(MessagesManager.get().getString("specter_mode_message"))));
-            targetCreateModeMessage = ChatColor.translateAlternateColorCodes('&',(Objects.requireNonNull(MessagesManager.get().getString("target_create_mode_message"))));
-            targetSurvivalModeMessage = ChatColor.translateAlternateColorCodes('&',(Objects.requireNonNull(MessagesManager.get().getString("target_survival_mode_message"))));
-            myChatClearMessage = ChatColor.translateAlternateColorCodes('&',(Objects.requireNonNull(MessagesManager.get().getString("my_chat_clear_message"))));
-            allChatClearMessage = ChatColor.translateAlternateColorCodes('&',(Objects.requireNonNull(MessagesManager.get().getString("all_chat_clear_message"))));
-            broadcastCommandMessage = ChatColor.translateAlternateColorCodes('&',(Objects.requireNonNull(MessagesManager.get().getString("broadcast_command_message"))));
-            broadcastCooldownMessage = ChatColor.translateAlternateColorCodes('&',(Objects.requireNonNull(MessagesManager.get().getString("broadcast_cooldown_message"))));
-            messageGm0 = ChatColor.translateAlternateColorCodes('&',(Objects.requireNonNull(MessagesManager.get().getString("message_gm_0"))));
-            messageGm1 = ChatColor.translateAlternateColorCodes('&',(Objects.requireNonNull(MessagesManager.get().getString("message_gm_1"))));
-            messageGm2 = ChatColor.translateAlternateColorCodes('&',(Objects.requireNonNull(MessagesManager.get().getString("message_gm_2"))));
-            messageGm3 = ChatColor.translateAlternateColorCodes('&',(Objects.requireNonNull(MessagesManager.get().getString("message_gm_3"))));
+            joinMessage = ChatColor.translateAlternateColorCodes('&',(MessagesManager.get().getString("join_message")));
+            leaveMessage = ChatColor.translateAlternateColorCodes('&',(MessagesManager.get().getString("leave_message")));
+            firstTimeJoinMessage = ChatColor.translateAlternateColorCodes('&',(MessagesManager.get().getString("first_time_join_message")));
+            setSpawnMessage = ChatColor.translateAlternateColorCodes('&',(MessagesManager.get().getString("set_spawn_message")));
+            teleportMessage = ChatColor.translateAlternateColorCodes('&',(MessagesManager.get().getString("teleport_message")));
+            unknownCommandMessage = ChatColor.translateAlternateColorCodes('&',(MessagesManager.get().getString("unknown_command_message")));
+            createModeMessage = ChatColor.translateAlternateColorCodes('&',(MessagesManager.get().getString("create_mode_message")));
+            survivalModeMessage = ChatColor.translateAlternateColorCodes('&',(MessagesManager.get().getString("survival_mode_message")));
+            adventureModeMessage = ChatColor.translateAlternateColorCodes('&',(MessagesManager.get().getString("adventure_mode_message")));
+            specterModeMessage = ChatColor.translateAlternateColorCodes('&',(MessagesManager.get().getString("specter_mode_message")));
+            targetCreateModeMessage = ChatColor.translateAlternateColorCodes('&',(MessagesManager.get().getString("target_create_mode_message")));
+            targetSurvivalModeMessage = ChatColor.translateAlternateColorCodes('&',(MessagesManager.get().getString("target_survival_mode_message")));
+            myChatClearMessage = ChatColor.translateAlternateColorCodes('&',(MessagesManager.get().getString("my_chat_clear_message")));
+            allChatClearMessage = ChatColor.translateAlternateColorCodes('&',(MessagesManager.get().getString("all_chat_clear_message")));
+            broadcastCommandMessage = ChatColor.translateAlternateColorCodes('&',(MessagesManager.get().getString("broadcast_command_message")));
+            broadcastCooldownMessage = ChatColor.translateAlternateColorCodes('&',(MessagesManager.get().getString("broadcast_cooldown_message")));
+            messageGm0 = ChatColor.translateAlternateColorCodes('&',(MessagesManager.get().getString("message_gm_0")));
+            messageGm1 = ChatColor.translateAlternateColorCodes('&',(MessagesManager.get().getString("message_gm_1")));
+            messageGm2 = ChatColor.translateAlternateColorCodes('&',(MessagesManager.get().getString("message_gm_2")));
+            messageGm3 = ChatColor.translateAlternateColorCodes('&',(MessagesManager.get().getString("message_gm_3")));
             title = getConfig().getString("title");
             subtitle = getConfig().getString("subtitle");
-        } catch (NullPointerException e) {
+        } catch (NullPointerException | IllegalArgumentException e) {
             e.printStackTrace();
             getLogger().info("UtilTool의 yml 파일들에서 정보를 불러오는데 문제가 발생하였습니다.");
-            getLogger().info("빈 문구가 있는지 확인해주세요.");
         }
     }
 
