@@ -110,7 +110,7 @@ public final class UtilTool extends JavaPlugin implements Listener {
                     return false;
                 }
             } else {
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', unknownCommandMessage));
+                player.sendMessage(unknownCommandMessage);
                 return false;
             }
         }
@@ -123,11 +123,11 @@ public final class UtilTool extends JavaPlugin implements Listener {
             getConfig().set("spawnpoint.pitch", player.getLocation().getPitch());
             saveConfig();
             getSpawnInfo();
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', setSpawnMessage));
+            player.sendMessage(setSpawnMessage);
             return false;
         }
         if (Arrays.asList(spawn).contains(cmd.getName()) && player.hasPermission("utiltool.spawn")) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', teleportMessage));
+            player.sendMessage(teleportMessage);
             player.teleport(new Location(world, x, y, z, yaw, pitch));
             player.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
             return false;
@@ -136,14 +136,14 @@ public final class UtilTool extends JavaPlugin implements Listener {
             for (int myChatClearCount = 0; myChatClearCount < 100; myChatClearCount++) {
                 player.sendMessage("");
             }
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', myChatClearMessage));
+            player.sendMessage(myChatClearMessage);
             return false;
         }
         if (cmd.getName().equalsIgnoreCase("전체채팅청소") && player.hasPermission("utiltool.allchatclear")) {
             for (int allChatClearCount = 0; allChatClearCount < 100; allChatClearCount++) {
                 getServer().broadcastMessage("");
             }
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', allChatClearMessage));
+            player.sendMessage(allChatClearMessage);
             return false;
         }
         if (cmd.getName().equalsIgnoreCase("gmc") && player.hasPermission("utiltool.gamemode")) {
@@ -151,13 +151,13 @@ public final class UtilTool extends JavaPlugin implements Listener {
                 Player target = Bukkit.getPlayer(args[0]);
                 if (target != null){
                     target.setGameMode(GameMode.CREATIVE);
-                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', createModeMessage));
-                    String targetCreateMessage = ChatColor.translateAlternateColorCodes('&', targetCreateModeMessage);
+                    player.sendMessage(createModeMessage);
+                    String targetCreateMessage = targetCreateModeMessage;
                     player.sendMessage(targetCreateMessage.replace("%target%", args[0]));
                 }
             } else {
                 player.setGameMode(GameMode.CREATIVE);
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', createModeMessage));
+                player.sendMessage(createModeMessage);
                 return false;
             }
         }
@@ -166,13 +166,13 @@ public final class UtilTool extends JavaPlugin implements Listener {
                 Player target = Bukkit.getPlayer(args[0]);
                 if (target != null){
                     target.setGameMode(GameMode.SURVIVAL);
-                    target.sendMessage(ChatColor.translateAlternateColorCodes('&', survivalModeMessage));
-                    String targetSurvivalMessage = ChatColor.translateAlternateColorCodes('&', targetSurvivalModeMessage);
+                    target.sendMessage(survivalModeMessage);
+                    String targetSurvivalMessage = targetSurvivalModeMessage;
                     player.sendMessage(targetSurvivalMessage.replace("%target%", args[0]));
                 }
             } else {
                 player.setGameMode(GameMode.SURVIVAL);
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', survivalModeMessage));
+                player.sendMessage(survivalModeMessage);
                 return false;
             }
         }
@@ -181,32 +181,32 @@ public final class UtilTool extends JavaPlugin implements Listener {
                 switch (args[0]) {
                     case "0":
                         player.setGameMode(GameMode.SURVIVAL);
-                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', survivalModeMessage));
+                        player.sendMessage(survivalModeMessage);
                         break;
                     case "1":
                         player.setGameMode(GameMode.CREATIVE);
-                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', createModeMessage));
+                        player.sendMessage(createModeMessage);
                         break;
                     case "2":
                         player.setGameMode(GameMode.ADVENTURE);
-                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', adventureModeMessage));
+                        player.sendMessage(adventureModeMessage);
                         break;
                     case "3":
                         player.setGameMode(GameMode.SPECTATOR);
-                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', specterModeMessage));
+                        player.sendMessage(specterModeMessage);
                         break;
                     default:
-                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', messageGm0));
-                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', messageGm1));
-                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', messageGm2));
-                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', messageGm3));
+                        player.sendMessage(messageGm0);
+                        player.sendMessage(messageGm1);
+                        player.sendMessage(messageGm2);
+                        player.sendMessage(messageGm3);
                         break;
                 }
             } else {
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', messageGm0));
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', messageGm1));
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', messageGm2));
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', messageGm3));
+                player.sendMessage(messageGm0);
+                player.sendMessage(messageGm1);
+                player.sendMessage(messageGm2);
+                player.sendMessage(messageGm3);
             }
         }
         if (cmd.getName().equalsIgnoreCase("확성기") && player.hasPermission("utiltool.broadcaster")) {
@@ -218,10 +218,10 @@ public final class UtilTool extends JavaPlugin implements Listener {
                     Bukkit.broadcastMessage("");
                     BroadCasterCooldown.setCooldown(player, 300);
                 } else {
-                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', broadcastCommandMessage));
+                    player.sendMessage(broadcastCommandMessage);
                 }
             } else {
-                String broadcastMessage = ChatColor.translateAlternateColorCodes('&', broadcastCooldownMessage);
+                String broadcastMessage = broadcastCooldownMessage;
                 player.sendMessage(broadcastMessage.replace("%time%", Integer.toString(BroadCasterCooldown.getCooldown(player))));
             }
             return false;
@@ -274,31 +274,32 @@ public final class UtilTool extends JavaPlugin implements Listener {
         stay = getConfig().getInt("stay");
         fadeOut = getConfig().getInt("fadeOut");
         try {
-            joinMessage = MessagesManager.get().getString("join_message");
-            leaveMessage = MessagesManager.get().getString("leave_message");
-            firstTimeJoinMessage = MessagesManager.get().getString("first_time_join_message");
-            setSpawnMessage = MessagesManager.get().getString("set_spawn_message");
-            teleportMessage = MessagesManager.get().getString("teleport_message");
-            unknownCommandMessage = MessagesManager.get().getString("unknown_command_message");
-            createModeMessage = MessagesManager.get().getString("create_mode_message");
-            survivalModeMessage = MessagesManager.get().getString("survival_mode_message");
-            adventureModeMessage = MessagesManager.get().getString("adventure_mode_message");
-            specterModeMessage = MessagesManager.get().getString("specter_mode_message");
-            targetCreateModeMessage = MessagesManager.get().getString("target_create_mode_message");
-            targetSurvivalModeMessage = MessagesManager.get().getString("target_survival_mode_message");
-            myChatClearMessage = MessagesManager.get().getString("my_chat_clear_message");
-            allChatClearMessage = MessagesManager.get().getString("all_chat_clear_message");
-            broadcastCommandMessage = MessagesManager.get().getString("broadcast_command_message");
-            broadcastCooldownMessage = MessagesManager.get().getString("broadcast_cooldown_message");
-            messageGm0 = MessagesManager.get().getString("message_gm_0");
-            messageGm1 = MessagesManager.get().getString("message_gm_1");
-            messageGm2 = MessagesManager.get().getString("message_gm_2");
-            messageGm3 = MessagesManager.get().getString("message_gm_3");
+            joinMessage = ChatColor.translateAlternateColorCodes('&',(Objects.requireNonNull(MessagesManager.get().getString("join_message"))));
+            leaveMessage = ChatColor.translateAlternateColorCodes('&',(Objects.requireNonNull(MessagesManager.get().getString("leave_message"))));
+            firstTimeJoinMessage = ChatColor.translateAlternateColorCodes('&',(Objects.requireNonNull(MessagesManager.get().getString("first_time_join_message"))));
+            setSpawnMessage = ChatColor.translateAlternateColorCodes('&',(Objects.requireNonNull(MessagesManager.get().getString("set_spawn_message"))));
+            teleportMessage = ChatColor.translateAlternateColorCodes('&',(Objects.requireNonNull(MessagesManager.get().getString("teleport_message"))));
+            unknownCommandMessage = ChatColor.translateAlternateColorCodes('&',(Objects.requireNonNull(MessagesManager.get().getString("unknown_command_message"))));
+            createModeMessage = ChatColor.translateAlternateColorCodes('&',(Objects.requireNonNull(MessagesManager.get().getString("create_mode_message"))));
+            survivalModeMessage = ChatColor.translateAlternateColorCodes('&',(Objects.requireNonNull(MessagesManager.get().getString("survival_mode_message"))));
+            adventureModeMessage = ChatColor.translateAlternateColorCodes('&',(Objects.requireNonNull(MessagesManager.get().getString("adventure_mode_message"))));
+            specterModeMessage = ChatColor.translateAlternateColorCodes('&',(Objects.requireNonNull(MessagesManager.get().getString("specter_mode_message"))));
+            targetCreateModeMessage = ChatColor.translateAlternateColorCodes('&',(Objects.requireNonNull(MessagesManager.get().getString("target_create_mode_message"))));
+            targetSurvivalModeMessage = ChatColor.translateAlternateColorCodes('&',(Objects.requireNonNull(MessagesManager.get().getString("target_survival_mode_message"))));
+            myChatClearMessage = ChatColor.translateAlternateColorCodes('&',(Objects.requireNonNull(MessagesManager.get().getString("my_chat_clear_message"))));
+            allChatClearMessage = ChatColor.translateAlternateColorCodes('&',(Objects.requireNonNull(MessagesManager.get().getString("all_chat_clear_message"))));
+            broadcastCommandMessage = ChatColor.translateAlternateColorCodes('&',(Objects.requireNonNull(MessagesManager.get().getString("broadcast_command_message"))));
+            broadcastCooldownMessage = ChatColor.translateAlternateColorCodes('&',(Objects.requireNonNull(MessagesManager.get().getString("broadcast_cooldown_message"))));
+            messageGm0 = ChatColor.translateAlternateColorCodes('&',(Objects.requireNonNull(MessagesManager.get().getString("message_gm_0"))));
+            messageGm1 = ChatColor.translateAlternateColorCodes('&',(Objects.requireNonNull(MessagesManager.get().getString("message_gm_1"))));
+            messageGm2 = ChatColor.translateAlternateColorCodes('&',(Objects.requireNonNull(MessagesManager.get().getString("message_gm_2"))));
+            messageGm3 = ChatColor.translateAlternateColorCodes('&',(Objects.requireNonNull(MessagesManager.get().getString("message_gm_3"))));
             title = getConfig().getString("title");
             subtitle = getConfig().getString("subtitle");
         } catch (NullPointerException e) {
             e.printStackTrace();
-            getLogger().info("config.yml에서 정보를 불러오는데 문제가 발생하였습니다.");
+            getLogger().info("UtilTool의 yml 파일들에서 정보를 불러오는데 문제가 발생하였습니다.");
+            getLogger().info("빈 문구가 있는지 확인해주세요.");
         }
     }
 
@@ -321,9 +322,9 @@ public final class UtilTool extends JavaPlugin implements Listener {
         Player player = event.getPlayer();
         if (PlayerUuidManager.get().getStringList("UUIDs").contains(player.getUniqueId().toString())) {
             if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-                event.setJoinMessage(ChatColor.translateAlternateColorCodes('&', PlaceholderAPI.setPlaceholders(player, joinMessage)));
+                event.setJoinMessage(joinMessage);
             } else {
-                event.setJoinMessage(ChatColor.translateAlternateColorCodes('&', joinMessage));
+                event.setJoinMessage(joinMessage);
             }
         } else {
             if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
