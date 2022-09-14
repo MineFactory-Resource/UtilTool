@@ -3,15 +3,9 @@ package net.teamuni.playerjoinandleave;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.Map;
-import org.bukkit.configuration.ConfigurationSection;
 
 public class MessagesManager {
     private static final UtilTool main = UtilTool.getPlugin(UtilTool.class);
