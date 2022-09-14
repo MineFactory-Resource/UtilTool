@@ -67,6 +67,7 @@ public final class UtilTool extends JavaPlugin implements Listener {
     int stay;
     int fadeOut;
 
+
     @Override
     public void onEnable() {
         this.getServer().getPluginManager().registerEvents(this, this);
@@ -274,26 +275,26 @@ public final class UtilTool extends JavaPlugin implements Listener {
         stay = getConfig().getInt("stay");
         fadeOut = getConfig().getInt("fadeOut");
         try {
-            joinMessage = ChatColor.translateAlternateColorCodes('&',(MessagesManager.get().getString("join_message")));
-            leaveMessage = ChatColor.translateAlternateColorCodes('&',(MessagesManager.get().getString("leave_message")));
-            firstTimeJoinMessage = ChatColor.translateAlternateColorCodes('&',(MessagesManager.get().getString("first_time_join_message")));
-            setSpawnMessage = ChatColor.translateAlternateColorCodes('&',(MessagesManager.get().getString("set_spawn_message")));
-            teleportMessage = ChatColor.translateAlternateColorCodes('&',(MessagesManager.get().getString("teleport_message")));
-            unknownCommandMessage = ChatColor.translateAlternateColorCodes('&',(MessagesManager.get().getString("unknown_command_message")));
-            createModeMessage = ChatColor.translateAlternateColorCodes('&',(MessagesManager.get().getString("create_mode_message")));
-            survivalModeMessage = ChatColor.translateAlternateColorCodes('&',(MessagesManager.get().getString("survival_mode_message")));
-            adventureModeMessage = ChatColor.translateAlternateColorCodes('&',(MessagesManager.get().getString("adventure_mode_message")));
-            specterModeMessage = ChatColor.translateAlternateColorCodes('&',(MessagesManager.get().getString("specter_mode_message")));
-            targetCreateModeMessage = ChatColor.translateAlternateColorCodes('&',(MessagesManager.get().getString("target_create_mode_message")));
-            targetSurvivalModeMessage = ChatColor.translateAlternateColorCodes('&',(MessagesManager.get().getString("target_survival_mode_message")));
-            myChatClearMessage = ChatColor.translateAlternateColorCodes('&',(MessagesManager.get().getString("my_chat_clear_message")));
-            allChatClearMessage = ChatColor.translateAlternateColorCodes('&',(MessagesManager.get().getString("all_chat_clear_message")));
-            broadcastCommandMessage = ChatColor.translateAlternateColorCodes('&',(MessagesManager.get().getString("broadcast_command_message")));
-            broadcastCooldownMessage = ChatColor.translateAlternateColorCodes('&',(MessagesManager.get().getString("broadcast_cooldown_message")));
-            messageGm0 = ChatColor.translateAlternateColorCodes('&',(MessagesManager.get().getString("message_gm_0")));
-            messageGm1 = ChatColor.translateAlternateColorCodes('&',(MessagesManager.get().getString("message_gm_1")));
-            messageGm2 = ChatColor.translateAlternateColorCodes('&',(MessagesManager.get().getString("message_gm_2")));
-            messageGm3 = ChatColor.translateAlternateColorCodes('&',(MessagesManager.get().getString("message_gm_3")));
+            joinMessage = MessagesManager.get("join_message");
+            leaveMessage = MessagesManager.get("leave_message");
+            firstTimeJoinMessage = MessagesManager.get("first_time_join_message");
+            setSpawnMessage = MessagesManager.get("set_spawn_message");
+            teleportMessage = MessagesManager.get("teleport_message");
+            unknownCommandMessage = MessagesManager.get("unknown_command_message");
+            createModeMessage = MessagesManager.get("create_mode_message");
+            survivalModeMessage = MessagesManager.get("survival_mode_message");
+            adventureModeMessage = MessagesManager.get("adventure_mode_message");
+            specterModeMessage = MessagesManager.get("specter_mode_message");
+            targetCreateModeMessage = MessagesManager.get("target_create_mode_message");
+            targetSurvivalModeMessage = MessagesManager.get("target_survival_mode_message");
+            myChatClearMessage = MessagesManager.get("my_chat_clear_message");
+            allChatClearMessage = MessagesManager.get("all_chat_clear_message");
+            broadcastCommandMessage = MessagesManager.get("broadcast_command_message");
+            broadcastCooldownMessage = MessagesManager.get("broadcast_cooldown_message");
+            messageGm0 = MessagesManager.get("message_gm_0");
+            messageGm1 = MessagesManager.get("message_gm_1");
+            messageGm2 = MessagesManager.get("message_gm_2");
+            messageGm3 = MessagesManager.get("message_gm_3");
             title = getConfig().getString("title");
             subtitle = getConfig().getString("subtitle");
         } catch (NullPointerException | IllegalArgumentException e) {
