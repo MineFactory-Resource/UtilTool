@@ -322,15 +322,15 @@ public final class UtilTool extends JavaPlugin implements Listener {
         Player player = event.getPlayer();
         if (PlayerUuidManager.get().getStringList("UUIDs").contains(player.getUniqueId().toString())) {
             if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-                event.setJoinMessage(joinMessage);
+                event.setJoinMessage(PlaceholderAPI.setPlaceholders(player,joinMessage));
             } else {
                 event.setJoinMessage(joinMessage);
             }
         } else {
             if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-                event.setJoinMessage(ChatColor.translateAlternateColorCodes('&', PlaceholderAPI.setPlaceholders(player, firstTimeJoinMessage)));
+                event.setJoinMessage(PlaceholderAPI.setPlaceholders(player, firstTimeJoinMessage));
             } else {
-                event.setJoinMessage(ChatColor.translateAlternateColorCodes('&', firstTimeJoinMessage));
+                event.setJoinMessage(firstTimeJoinMessage);
             }
             List<String> playerUuidList = PlayerUuidManager.get().getStringList("UUIDs");
             playerUuidList.add(player.getUniqueId().toString());
@@ -342,9 +342,9 @@ public final class UtilTool extends JavaPlugin implements Listener {
     public void onLeave(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-            event.setQuitMessage(ChatColor.translateAlternateColorCodes('&', PlaceholderAPI.setPlaceholders(player, leaveMessage)));
+            event.setQuitMessage(PlaceholderAPI.setPlaceholders(player, leaveMessage));
         } else {
-            event.setQuitMessage(ChatColor.translateAlternateColorCodes('&', leaveMessage));
+            event.setQuitMessage(leaveMessage);
         }
     }
 
